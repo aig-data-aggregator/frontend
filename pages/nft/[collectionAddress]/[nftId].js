@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
+import { queryNftInfo } from '../../../common/interface.js'
 
-const networkInfo = {
-    network: ZDKNetwork.Ethereum,
-    chain: ZDKChain.Mainnet,
-}
+// const networkInfo = {
+//     network: ZDKNetwork.Ethereum,
+//     chain: ZDKChain.Mainnet,
+// }
 
-const API_ENDPOINT = "https://api.zora.co/graphql";
-const args = { 
-              endPoint:API_ENDPOINT, 
-              networks:[networkInfo], 
-              apiKey: process.env.API_KEY 
-            } 
+// const API_ENDPOINT = "https://api.zora.co/graphql";
+// const args = { 
+//               endPoint:API_ENDPOINT, 
+//               networks:[networkInfo], 
+//               apiKey: process.env.API_KEY 
+//             } 
 
-const zdk = new ZDK(args)
+// const zdk = new ZDK(args)
 
 export default function NftPage () {
     const router = useRouter()
@@ -26,18 +27,9 @@ export default function NftPage () {
     })
 
     const queryNft = async () => {
-        const newNftInfo = await zdk.token({
-            token: {
-                address: collectionAddress,
-                tokenId: nftId
-            }
-        })
-        console.log(newNftInfo)
-        setNftInfo({
-            name: newNftInfo.token.token.name,
-            description: newNftInfo.token.token.description,
-            url: newNftInfo.token.token.image.mediaEncoding.poster
-        })
+        const nft =  await queryNftInfo(collectionAddress, nftId)
+        console.log(nft)
+        setNftInfo(nft)
     }
 
     useEffect(() => {
@@ -48,9 +40,9 @@ export default function NftPage () {
 
     return (
         <div>
-            <h1>{nftInfo.name}</h1>
+            <h1>Name: {nftInfo.name}</h1>
             <img src={nftInfo.url} />
-            <p>{nftInfo.description}</p>
+            <p>Description: {nftInfo.description}</p>
         </div>
     )
 }
