@@ -1,0 +1,4 @@
+- Pagination
+- Fallback in case of unsupported collection
+- Owner & Minter
+- [later] ENS

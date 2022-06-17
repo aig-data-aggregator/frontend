@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
-import { queryNftInfo } from '../../../common/interface.js'
+import { addressToCollections, queryNftInfo } from '../../../common/interface.js'
 
 // const networkInfo = {
 //     network: ZDKNetwork.Ethereum,
@@ -23,8 +23,10 @@ export default function NftPage () {
     const [nftInfo, setNftInfo] = useState({
         name: "",
         description: "",
-        url: ""
+        url: "",
+        sales: []
     })
+    const [collectionInfo, setCollectionInfo] = useState(null)
 
     const queryNft = async () => {
         const nft =  await queryNftInfo(collectionAddress, nftId)
@@ -32,9 +34,17 @@ export default function NftPage () {
         setNftInfo(nft)
     }
 
+    const queryCollection = async () => {
+        const collection = await addressToCollections(collectionAddress)
+        setCollectionInfo(collection)
+    }
+
     useEffect(() => {
-        if (nftId && collectionAddress) {
-            queryNft()
+        if (collectionAddress) {
+            if (nftId || nftId === 0) {
+                queryNft()
+            }
+            queryCollection()
         }       
     }, [nftId, collectionAddress])
 
@@ -43,6 +53,19 @@ export default function NftPage () {
             <h1>Name: {nftInfo.name}</h1>
             <img src={nftInfo.url} />
             <p>Description: {nftInfo.description}</p>
+            { collectionInfo ? <a href={collectionInfo.nftUrl.replace('{id}', nftId)} target="_blank" rel="noopener noreferrer">View on {collectionInfo.platform}</a> : <></> }
+            <h2>Sales:</h2>
+            {
+                nftInfo.sales.map(sale => (
+                    <div key={sale.hash}>
+                        <p>{sale.timestamp}</p>
+                        <p>From {sale.seller} to {sale.buyer}</p>
+                        <p>Price: {sale.nativePrice.amount} {sale.nativePrice.currency} ({sale.usdPrice} USD)</p>
+                        <a href={`https://etherscan.io/tx/${sale.hash}`} target="_blank" rel="noopener noreferrer">View on Etherscan</a>
+
+                    </div>
+                ))
+            }
         </div>
     )
 }
