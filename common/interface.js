@@ -22,7 +22,27 @@ const queryCollections = async () => {
 
 const addressToCollections = async (address) => {
     const collections = await queryCollections()
-    return collections.filter(collection => collection.address === address)[0]
+    if(collections.map(collection=>collection.address).includes(address))
+        return collections.filter(collection => collection.address === address)[0]
+    else{
+        // fallback
+        let info = await zdk.collections({
+            where: {
+                collectionAddresses: [address]
+            }
+        })
+        info = info.collections.nodes[0]
+        return {
+            address,
+            coverImage: "",
+            name: info.name,
+            description: info.description,
+            platform: "",
+            collectionUrl: null,
+            nftUrl: null,
+            tags: []
+        }
+    }
 }
 
 const queryNfts = async (collectionAddress) => {
@@ -82,4 +102,14 @@ const queryNftInfo = async (collectionAddress, nftId) => {
     }
 }
 
-export { addressToCollections, queryCollections, queryNfts, queryNftInfo }
+const getCategories = () => {
+    let totalCategories = []
+    collections.forEach(collection => {
+        const currentCategories = collection.tags || []
+        currentCategories.forEach(category => totalCategories.push(category))
+    })
+    const unique = [...new Set(totalCategories)]
+    return unique
+}
+
+export { addressToCollections, queryCollections, queryNfts, queryNftInfo, getCategories }

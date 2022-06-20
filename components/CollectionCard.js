@@ -9,7 +9,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
             width: "auto",
             padding: "1em"
         }}>
-            <img src= {coverUrl} alt="Collection's Cover image"></img>
+            <img src={coverUrl} alt="Collection's Cover image"></img>
             <div style={{
                 padding: "2px 16px"
             }}>

@@ -6,43 +6,139 @@ export const collections = [
         description: "The Bored Ape Yacht Club is a collection of 10,000 unique Bored Ape NFTs— unique digital collectibles living on the Ethereum blockchain. Your Bored Ape doubles as your Yacht Club membership card, and grants access to members-only benefits, the first of which is access to THE BATHROOM, a collaborative graffiti board. Future areas and perks can be unlocked by the community through roadmap activation. Visit www.BoredApeYachtClub.com for more details.",
         platform: "OpenSea",
         collectionUrl: "https://opensea.io/collection/boredapeyachtclub",
-        nftUrl: "https://opensea.io/assets/ethereum/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/{id}"
+        nftUrl: "https://opensea.io/assets/ethereum/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/{id}",
+        tags: ["Avatars"]
     },
     {
         address: "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258",
         coverImage: "",
         name: "Otherdeed for Otherside",
-        description: "Otherdeed is the key to claiming land in Otherside. Each have a unique blend of environment and sediment — some with resources, some home to powerful artifacts. And on a very few, a Koda roams."
-
+        description: "Otherdeed is the key to claiming land in Otherside. Each have a unique blend of environment and sediment — some with resources, some home to powerful artifacts. And on a very few, a Koda roams.",
+        platform: "OpenSea",
+        collectionUrl: "https://opensea.io/collection/otherdeed",
+        nftUrl: "https://opensea.io/assets/ethereum/0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258/{id}",
+        tags: ["On-Chain Art"]
     },
     {
         address: "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b",
-        coverImage: "",
+        coverImage: "http://jingculturecommerce.com/wp-content/uploads/2021/11/rtfkt-murakami-clone-x-5-1024x576.jpg",
         name: "CLONE X - X TAKASHI MURAKAMI",
-        description: "🧬 CLONE X 🧬20,000 next-gen Avatars, by RTFKT and Takashi Murakami 🌸"
+        description: "🧬 CLONE X 🧬20,000 next-gen Avatars, by RTFKT and Takashi Murakami 🌸",
+        collectionUrl: "https://opensea.io/collection/clonex",
+        nftUrl: "https://opensea.io/assets/ethereum/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b/{id}",
+        tags: ["Avatars"]
     },
     {
         address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
         coverImage: "",
         name: "CryptoPunks",
-        description: "CryptoPunks launched as a fixed set of 10,000 items in mid-2017 and became one of the inspirations for the ERC-721 standard. They have been featured in places like The New York Times, Christie’s of London, Art|Basel Miami, and The PBS NewsHour."
+        description: "CryptoPunks launched as a fixed set of 10,000 items in mid-2017 and became one of the inspirations for the ERC-721 standard. They have been featured in places like The New York Times, Christie’s of London, Art|Basel Miami, and The PBS NewsHour.",
+        collectionUrl: "https://opensea.io/collection/cryptopunks",
+        nftUrl: "https://opensea.io/assets/ethereum/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/{id}",
+        tags: ["Punkverse"]
     },
     {
         address: "0x23581767a106ae21c074b2276d25e5c3e136a68b",
         coverImage: "",
         name: "Moonbirds",
-        description: "A collection of 10,000 utility-enabled PFPs that feature a richly diverse and unique pool of rarity-powered traits. What's more, each Moonbird unlocks private club membership and additional benefits the longer you hold them. We call it nesting – because, obviously."
+        description: "A collection of 10,000 utility-enabled PFPs that feature a richly diverse and unique pool of rarity-powered traits. What's more, each Moonbird unlocks private club membership and additional benefits the longer you hold them. We call it nesting – because, obviously.",
+        collectionUrl: "https://opensea.io/collection/proof-moonbirds",
+        nftUrl: "https://opensea.io/assets/ethereum/0x23581767a106ae21c074b2276d25e5c3e136a68b/{id}",
+        tags: ["Avatars", "Utility"]
     },
     {
         address: "0x6728d91abacdbac2f326baa384513a523c21b80a",
         coverImage: "https://img.seadn.io/files/817abc0f4174e74a7aca64ab4928ac75.png?fit=max&auto=format",
         name: "ShitBeast",
-        description: "Call me SHIT GOD"
+        description: "Call me SHIT GOD",
+        collectionUrl: "https://opensea.io/collection/shitbeast",
+        nftUrl: "https://opensea.io/assets/ethereum/0x6728d91abacdbac2f326baa384513a523c21b80a/{id}",
+        tags: ["Avatars"]
     },
     {
-        address: '0xbce3781ae7ca1a5e050bd9c4c77369867ebc307e',
+        address: "0xbce3781ae7ca1a5e050bd9c4c77369867ebc307e",
         coverImage: "",
         name: "goblintown.wtf",
-        description: "AAAAAAAUUUUUGGGHHHHH gobblins goblinns GOBLINNNNNNNNns wekm ta goblintown yoo sniksnakr DEJEN RATS oooooh rats are yummmz dis a NEFTEEE O GOBBLINGS on da BLOKCHIN wat? oh. crustybutt da goblinking say GEE EMMM DEDJEN RUTS an queenie saay HLLO SWEATIES ok dats all byeby"
+        description: "AAAAAAAUUUUUGGGHHHHH gobblins goblinns GOBLINNNNNNNNns wekm ta goblintown yoo sniksnakr DEJEN RATS oooooh rats are yummmz dis a NEFTEEE O GOBBLINGS on da BLOKCHIN wat? oh. crustybutt da goblinking say GEE EMMM DEDJEN RUTS an queenie saay HLLO SWEATIES ok dats all byeby",
+        collectionUrl: "https://opensea.io/collection/goblintownwtf",
+        nftUrl: "https://opensea.io/assets/ethereum/0xbce3781ae7ca1a5e050bd9c4c77369867ebc307e/{id}",
+        tags: ["Avatars"]
+    },
+    {
+        address: "0xDdE2D979e8d39BB8416eAfcFC1758f3CaB2C9C72",
+        coverImage: "https://docs.knownorigin.io/press-kit/Grey-blue-ko-icn.png",
+        name: "KnownOrigin v1",
+        description: "Discover, buy and collect digital assets of artwork by some of the world's most respected artists, illustrators and creative practitioners.",
+        collectionUrl: "https://knownorigin.io/",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0xfbeef911dc5821886e1dda71586d90ed28174b7d",
+        coverImage: "https://docs.knownorigin.io/press-kit/Grey-blue-ko-icn.png",
+        name: "KnownOrigin v2",
+        description: "Discover, buy and collect digital assets of artwork by some of the world's most respected artists, illustrators and creative practitioners.",
+        collectionUrl: "https://knownorigin.io/",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0xABB3738f04Dc2Ec20f4AE4462c3d069d02AE045B",
+        coverImage: "https://docs.knownorigin.io/press-kit/Grey-blue-ko-icn.png",
+        name: "KnownOrigin v3",
+        description: "Discover, buy and collect digital assets of artwork by some of the world's most respected artists, illustrators and creative practitioners.",
+        collectionUrl: "https://knownorigin.io/",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0x41a322b28d0ff354040e2cbc676f0320d8c8850d",
+        coverImage: "https://research.binance.com/static/images/projects/superrare/logo.png",
+        name: "SuperRare v1",
+        description: "1/1 NFT platform for unique artworks by well-known artists.",
+        collectionUrl: "https://superrare.com/",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0",
+        coverImage: "https://research.binance.com/static/images/projects/superrare/logo.png",
+        name: "SuperRare v2",
+        description: "1/1 NFT platform for unique artworks by well-known artists.",
+        collectionUrl: "https://superrare.com/",
+        nftUrl: "https://superrare.com/artwork-v2/{id}",
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0xa35375621bc9bfc0f264b8eafee1216254fa5db9",
+        coverImage: "https://mma.prnewswire.com/media/1763350/makersplace_Logo.jpg?p=facebook",
+        name: "Makersplace",
+        description: "Every digital creation available through MakersPlace is an authentic and truly unique digital creation, signed and issued by the creator — made possible by blockchain technology. Even if the digital creation is copied, it won't be the authentic and originally signed version.",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0x059edd72cd353df5106d2b9cc5ab83a52287ac3a",
+        coverImage: "https://www.artblocks.io/squigWhiteCircle.png",
+        name: "Artblocks",
+        description: "Every digital creation available through MakersPlace is an authentic and truly unique digital creation, signed and issued by the creator — made possible by blockchain technology. Even if the digital creation is copied, it won't be the authentic and originally signed version.",
+        nftUrl: "https://www.artblocks.io/token/{id}",
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0x76b99b4Df182ff44C185687D7676e35aE7bfd588",
+        converImage: "https://f8n-production.s3-us-east-2.amazonaws.com/collections/fnd.jpg",
+        name: "Foundation",
+        description: "Foundation is building the new creative economy. Create, explore & collect digital art NFTs.",
+        nftUrl: null,
+        tags: ["On-Chain Art"]
+    },
+    {
+        address: "0x60f80121c31a0d46b5279700f9df786054aa5ee5",
+        coverImage: "https://seeklogo.com/images/R/rarible-logo-C237AACF7C-seeklogo.com.png",
+        name: "Rarible",
+        description: "Community-centric NFT marketplace",
+        nftUrl: "https://rarible.com/token/0x60f80121c31a0d46b5279700f9df786054aa5ee5:{id}",
+        tags: ["On-Chain Art"]
     }
 ]
