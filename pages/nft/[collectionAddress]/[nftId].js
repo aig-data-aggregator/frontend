@@ -30,7 +30,6 @@ export default function NftPage () {
 
     const queryNft = async () => {
         const nft =  await queryNftInfo(collectionAddress, nftId)
-        console.log(nft)
         setNftInfo(nft)
     }
 
@@ -54,6 +53,8 @@ export default function NftPage () {
             <img src={nftInfo.url} />
             <p>Description: {nftInfo.description}</p>
             { collectionInfo ? <a href={collectionInfo.nftUrl.replace('{id}', nftId)} target="_blank" rel="noopener noreferrer">View on {collectionInfo.platform}</a> : <></> }
+            <p><a href={`https://etherscan.io/address/${nftInfo.owner}`} target="_blank" rel="noopener noreferrer">Owner: {nftInfo.owner}</a></p>
+            <p><a href={`https://etherscan.io/address/${nftInfo.minter}`} target="_blank" rel="noopener noreferrer">Minter: {nftInfo.minter}</a></p>
             <h2>Sales:</h2>
             {
                 nftInfo.sales.map(sale => (

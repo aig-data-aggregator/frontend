@@ -22,10 +22,19 @@ const queryCollections = async () => {
 
 const addressToCollections = async (address) => {
     const collections = await queryCollections()
-    if(collections.map(collection=>collection.address).includes(address))
-        return collections.filter(collection => collection.address === address)[0]
-    else{
-        // fallback
+    if(collections.map(collection=>collection.address).includes(address)) {
+        const matchingCollection = collections.filter(collection => collection.address === address)[0]
+
+        if (matchingCollection.openseaSlug) {
+            const openseaInfo = await queryOpenseaInfo(matchingCollection.openseaSlug)
+            return {
+                ...matchingCollection,
+                ...openseaInfo
+            }
+        }
+        return matchingCollection
+    } else {
+        // fallback da finire
         let info = await zdk.collections({
             where: {
                 collectionAddresses: [address]
@@ -45,8 +54,8 @@ const addressToCollections = async (address) => {
     }
 }
 
-const queryNfts = async (collectionAddress) => {
-    let info = await zdk.tokens({
+const queryNfts = async (collectionAddress, hashPage) => {
+    let options = {
         where: {
             collectionAddresses: [collectionAddress]
         },
@@ -54,24 +63,31 @@ const queryNfts = async (collectionAddress) => {
             sortKey: "MINTED"
         },
         pagination: {
-            limit: 100
+            limit: 50
         },
         nodes: {
             image: {
                 url: true
             }
         }
-    })
-    console.log(info)
-    // info.tokens.nodes.filter(nft => nft.owner !== "0x0000000000000000000000000000000000000000")
-    return info.tokens.nodes.map(
-        nft => ({
-            name: nft.token.name || `#${nft.token.tokenId}`,
-            tokenId: nft.token.tokenId,
-            thumbnail: nft.token?.image?.mediaEncoding?.thumbnail,
-            description: nft.token.description
-        })
-    )
+    }
+    if(hashPage){
+        options.pagination = {
+            after: hashPage
+        }
+    }
+    let info = await zdk.tokens(options)
+    return {
+        nfts: info.tokens.nodes.map(
+            nft => ({
+                name: nft.token.name || `#${nft.token.tokenId}`,
+                tokenId: nft.token.tokenId,
+                thumbnail: nft.token?.image?.mediaEncoding?.thumbnail,
+                description: nft.token.description
+            })
+        ),
+        nextPage: info.tokens.pageInfo.hasNextPage && info.tokens.pageInfo.endCursor
+    }
 }
 
 const queryNftInfo = async (collectionAddress, nftId) => {
@@ -82,10 +98,11 @@ const queryNftInfo = async (collectionAddress, nftId) => {
         },
         includeFullDetails: true
     })
-    console.log("NFT Singolo: ", info)
     return {
         name: info.token.token.name || `#${info.token.token.tokenId}`,
         description: info.token.token.description,
+        owner: info.token.token.owner,
+        minter: info.token.token.mintInfo.originatorAddress,
         url: info.token.token.image.mediaEncoding.poster,
         sales: info.token.sales.map(sale => ({
             buyer: sale.buyerAddress,
@@ -110,6 +127,47 @@ const getCategories = () => {
     })
     const unique = [...new Set(totalCategories)]
     return unique
+}
+
+const queryOpenseaInfo = async (slug) => {
+    const collectionInfo = await fetch('https://api.opensea.io/api/v1/collection/' + slug).then(res => res.json()).then(res => res.collection)
+    return {
+        name: collectionInfo.name,
+        description: collectionInfo.description,
+        shortDescription: collectionInfo.short_description,
+        image: collectionInfo.image_url,
+        banner: collectionInfo.banner_image_url,
+        externalUrl: collectionInfo.external_url,
+        stats: {
+            day: {
+                volume: collectionInfo.stats.one_day_volume,
+                change: collectionInfo.stats.one_day_change,
+                sales: collectionInfo.stats.one_day_sales,
+                averagePrice: collectionInfo.stats.one_day_average_price
+            },
+            week: {
+                volume: collectionInfo.stats.seven_day_volume,
+                change: collectionInfo.stats.seven_day_change,
+                sales: collectionInfo.stats.seven_day_sales,
+                averagePrice: collectionInfo.stats.seven_day_average_price
+            },
+            month: {
+                volume: collectionInfo.stats.thirty_day_volume,
+                change: collectionInfo.stats.thirty_day_change,
+                sales: collectionInfo.stats.thirty_day_sales,
+                averagePrice: collectionInfo.stats.thirty_day_average_price
+            },
+            total: {
+                volume: collectionInfo.stats.total_volume,
+                sales: collectionInfo.stats.total_sales,
+                averagePrice: collectionInfo.stats.total_average_price
+            },
+            floorPrice: collectionInfo.stats.floor_price,
+            marketCap: collectionInfo.stats.market_cap,
+            numOwners: collectionInfo.stats.num_owners,
+            totalSupply: collectionInfo.stats.total_supply,
+        }
+    }
 }
 
 export { addressToCollections, queryCollections, queryNfts, queryNftInfo, getCategories }

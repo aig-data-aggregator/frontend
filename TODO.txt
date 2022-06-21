@@ -1,4 +1,7 @@
-- Pagination
-- Fallback in case of unsupported collection
-- Owner & Minter
+- Fallback in case of unsupported collection (missing: get OpenSea slug of a specific contract)
+
+-----
+- Historical Data
+- Rankings
+- Events
 - [later] ENS
