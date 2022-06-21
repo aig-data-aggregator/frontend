@@ -6,6 +6,8 @@ import { queryCollections, getCategories } from '../common/interface';
 
 import { useEffect, useState } from 'react';
 import CollectionCard from '../components/CollectionCard';
+import Header from '../components/Header';
+import { Flex, Box } from '@chakra-ui/react';
 
 
 export default function Home() {
@@ -50,17 +52,26 @@ export default function Home() {
   }, [])
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>AIG Data</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1>Collections</h1>
+      <Box pt="5em">
         {categories.map(category => <label key={category}><input type="checkbox" value={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}/>{category}</label>)}
-        {collections.map(collectionInfo => toBeDisplayed(collectionInfo) && <CollectionCard key={collectionInfo.address} name={collectionInfo.name} description={collectionInfo.description} address={collectionInfo.address} coverUrl={collectionInfo.coverImage}/>)}
+      </Box>
+        <Flex m="1em" wrap="wrap" justify="space-around" align="center">
+       {
+            collections.map(
+                collectionInfo => toBeDisplayed(collectionInfo)
+                &&
+                <Box my="1em">
+                    <CollectionCard key={collectionInfo.address} name={collectionInfo.name} description={collectionInfo.description} address={collectionInfo.address} coverUrl={collectionInfo.coverImage}/>
+                </Box>
+            )
+        }
         {/* {JSON.stringify(collectionInfos)} */}
-      </main>
+      </Flex>
     </div>
   )
 }
