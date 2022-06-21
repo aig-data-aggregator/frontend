@@ -82,7 +82,7 @@ const queryNfts = async (collectionAddress, hashPage) => {
             nft => ({
                 name: nft.token.name || `#${nft.token.tokenId}`,
                 tokenId: nft.token.tokenId,
-                thumbnail: nft.token?.image?.mediaEncoding?.thumbnail,
+                thumbnail: nft.token?.image?.mediaEncoding?.poster,
                 description: nft.token.description
             })
         ),
