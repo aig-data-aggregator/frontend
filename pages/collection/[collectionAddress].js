@@ -3,6 +3,15 @@ import { useRouter } from "next/router"
 import NftCard from '../../components/NftCard';
 
 import { addressToCollections, queryNfts } from '../../common/interface'
+import { Box, Button, Image, Heading } from "@chakra-ui/react";
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+} from '@chakra-ui/react'
 
 export default function CollectionsPage () {
     const [pageIndex, setPageIndex] = useState(0)
@@ -70,41 +79,82 @@ export default function CollectionsPage () {
     }
         
     return (
-        <div>
-            <button onClick={fetchPrevPage} disabled={loadingPage}>Prev Page</button>
-            <button onClick={fetchNextPage} disabled={loadingPage}>Next Page</button>
-            <h2>Stats {collection.multiContract ? '(all versions)' : ''}</h2>
-            {collection.banner ? <img src={collection.banner} /> : <></>}
-            <h1>{ collection.name || collectionAddress}</h1>
-            <p>{collection.description || 'No description'}</p>
-            {collection.stats?.totalSupply ? <p>{collection.stats.totalSupply} NFTs</p> : <></>}
-            {collection.stats?.floorPrice ? <p>Floor: {collection.stats.floorPrice} ETH</p> : <></>}
-            {collection.stats?.numOwners ? <p>{collection.stats.numOwners} owners</p> : <></>}
-            {
-                collection.stats ?
-                ['day', 'week', 'month', 'total'].map(period => (
-                    <div>
-                        <p>{period}</p>
-                        { collection.stats[period].sales ? <p>Sales: {collection.stats[period].sales}</p> : <></> }
-                        { collection.stats[period].volume ? <p>Volume: {collection.stats[period].volume}</p> : <></> }
-                        { collection.stats[period].change ? <p>Change: {collection.stats[period].change}</p> : <></> }
-                        { collection.stats[period].averagePrice ? <p>Average price: {collection.stats[period].averagePrice}</p> : <></> }
-                    </div>
-                )) : <></>
-            }
-            <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                margin: "auto",
-                alignItems: "center",
-            }}>
-              {
-                  nfts.map(nft => (
-                      <NftCard key={nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={collectionAddress} nftId={nft.tokenId}/>
-                  ))
-              }
-            </div>
-        </div>
+        <Box>
+            {collection.banner ? <Image src={collection.banner} alt="cover image" w="100%" h="20em" objectFit="cover" /> : <></>}
+            <Box m="2em">
+                <Heading>{ collection.name || collectionAddress}</Heading>
+                <Box maxW="40em">{collection.description || 'No description'}</Box>
+                <h2>Stats {collection.multiContract ? '(all versions)' : ''}</h2>
+                <StatGroup borderWidth="1px" borderRadius="lg" p="3" w="70%">
+                    <Stat>
+                        <StatLabel>Items</StatLabel>
+                        <StatNumber>{collection.stats?.totalSupply ? <p>{collection.stats.totalSupply}</p> : <></>}</StatNumber>
+                    </Stat>
+
+                    <Stat>
+                        <StatLabel>Floor</StatLabel>
+                        <StatNumber>{collection.stats?.floorPrice ? <p>{collection.stats.floorPrice} ETH</p> : <></>}</StatNumber>
+                        <StatHelpText>
+                        <StatArrow type='decrease' />
+                        42.069%
+                        </StatHelpText>
+                    </Stat>
+
+                    <Stat>
+                        <StatLabel>Owners</StatLabel>
+                        <StatNumber>{collection.stats?.numOwners ? <p>{collection.stats.numOwners}</p> : <></>}</StatNumber>
+                        <StatHelpText>
+                        <StatArrow type='increase' />
+                        69.420%
+                        </StatHelpText>
+                    </Stat>
+
+                    <Stat>
+                        <StatLabel>Sales</StatLabel>
+                        <StatNumber>{collection.stats ? (collection.stats['total'].sales ? <p>{collection.stats['total'].sales}</p> : <></>) : <></> }</StatNumber>
+                        <StatHelpText>
+                        <StatArrow type='increase' />
+                        69.420%
+                        </StatHelpText>
+                    </Stat>
+
+                    <Stat>
+                        <StatLabel>Volume</StatLabel>
+                        <StatNumber>{collection.stats ? (collection.stats['total'].volume ? <p>{Math.round(collection.stats['total'].volume * 100) / 100} ETH</p> : <></>) : <></> }</StatNumber>
+                        <StatHelpText>
+                        <StatArrow type='increase' />
+                        69.420%
+                        </StatHelpText>
+                    </Stat>
+                </StatGroup>
+                {
+                    collection.stats ?
+                    ['day', 'week', 'month'].map(period => (
+                        <div>
+                            <p>{period}</p>
+                            { collection.stats[period].sales ? <p>Sales: {collection.stats[period].sales}</p> : <></> }
+                            { collection.stats[period].volume ? <p>Volume: {collection.stats[period].volume}</p> : <></> }
+                            { collection.stats[period].change ? <p>Change: {collection.stats[period].change}</p> : <></> }
+                            { collection.stats[period].averagePrice ? <p>Average price: {collection.stats[period].averagePrice}</p> : <></> }
+                        </div>
+                    )) : <></>
+                }
+                <Button onClick={fetchPrevPage} disabled={loadingPage}>Prev Page</Button>
+                <Button onClick={fetchNextPage} disabled={loadingPage}>Next Page</Button>
+                <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                    margin: "auto",
+                    alignItems: "center",
+                }}>
+                {
+                    nfts.map(nft => (
+                        <NftCard key={nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={collectionAddress} nftId={nft.tokenId}/>
+                    ))
+                }
+                </div>
+            </Box>
+        </Box>
     )
 }
