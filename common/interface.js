@@ -103,7 +103,7 @@ const queryNftInfo = async (collectionAddress, nftId) => {
         description: info.token.token.description,
         owner: info.token.token.owner,
         minter: info.token.token.mintInfo.originatorAddress,
-        url: info.token.token.image.mediaEncoding.poster,
+        url: info.token.token.image.mediaEncoding.large,
         sales: info.token.sales.map(sale => ({
             buyer: sale.buyerAddress,
             seller: sale.sellerAddress,

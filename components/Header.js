@@ -8,7 +8,7 @@ export default function Header() {
                 <Link href="/"><Heading>AIG</Heading></Link>
                 <Input placeholder="Search items, collections, accounts" mx="2em" />
                 <Flex justify="right" align="center" mr="3">
-                    <Button colorScheme="teal">Connect Wallet</Button>
+                    <Button colorScheme="teal" bgColor="black">Connect Wallet</Button>
                 </Flex>
             </Flex>
             <Flex align="center" ml="2em">
