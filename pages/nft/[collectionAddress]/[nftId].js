@@ -52,7 +52,7 @@ export default function NftPage () {
             <h1>Name: {nftInfo.name}</h1>
             <img src={nftInfo.url} />
             <p>Description: {nftInfo.description}</p>
-            { collectionInfo ? <a href={collectionInfo.nftUrl.replace('{id}', nftId)} target="_blank" rel="noopener noreferrer">View on {collectionInfo.platform}</a> : <></> }
+            { collectionInfo && collectionInfo.nftUrl ? <a href={collectionInfo.nftUrl.replace('{id}', nftId)} target="_blank" rel="noopener noreferrer">View on {collectionInfo.platform}</a> : <></> }
             <p><a href={`https://etherscan.io/address/${nftInfo.owner}`} target="_blank" rel="noopener noreferrer">Owner: {nftInfo.owner}</a></p>
             <p><a href={`https://etherscan.io/address/${nftInfo.minter}`} target="_blank" rel="noopener noreferrer">Minter: {nftInfo.minter}</a></p>
             <h2>Sales:</h2>
