@@ -1,15 +1,27 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link"
-
 import { Box, Image, Badge, Text } from "@chakra-ui/react"
+import {addressToCollections} from "../common/interface"
 
 export default function CollectionCard({name, coverUrl, description, address}) {
+    const [collection, setCollection] = useState()
+
+    const queryCollection = async () => {
+        const singleCollectionInfo = await addressToCollections(address)
+        setCollection(singleCollectionInfo)
+    }
+
+    useEffect(()=>{
+        queryCollection()
+    },[])
     return (
         <Box w="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" h="md">
             <Image src={coverUrl} fallbackSrc="https://via.placeholder.com/500" alt={"Collection's Cover image"} w="100%" h="15em" overflow="hidden" objectFit="cover" />
             <Box p="6">
                 <Box display="flex" alignItems="baseline">
-                    <Badge borderRadius="full" px="2" colorScheme="teal">NFT</Badge>
+                    {collection?.tags.map(tag=>
+                        <Badge borderRadius="full" px="2" colorScheme="teal" key={tag}>{tag}</Badge>
+                    )}  
                     <Box
                         color='gray.500'
                         fontWeight='semibold'
@@ -18,7 +30,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
                         textTransform='uppercase'
                         ml='2'
                     >
-                        10000 items
+                        {"Total NFTs: " + (collection?.stats?.count || "NA") }
                     </Box>
                 </Box>
                 <Box
@@ -42,7 +54,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
                     <Text as="i">{description}</Text>
                 </Box>
                 <Box fontWeight="bold">
-                    FLOOR: 7 ETH
+                    {"Floor Price: " + (collection?.stats?.floorPrice || "NA")}
                 </Box>
                 <Link href={`/collection/${address}`}>
                     <a style={{

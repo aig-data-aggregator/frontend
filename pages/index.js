@@ -58,14 +58,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box pt="5em">
-        {categories.map(category => <label key={category}><input type="checkbox" value={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}/>{category}</label>)}
+        {categories.map(category => <label key={category}><input type="checkbox" value={category} key={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}/>{category}</label>)}
       </Box>
         <Flex m="1em" wrap="wrap" justify="space-around" align="center">
        {
             collections.map(
                 collectionInfo => toBeDisplayed(collectionInfo)
                 &&
-                <Box my="1em">
+                <Box my="1em" key={collectionInfo.address}>
                     <CollectionCard key={collectionInfo.address} name={collectionInfo.name} description={collectionInfo.description} address={collectionInfo.address} coverUrl={collectionInfo.coverImage}/>
                 </Box>
             )

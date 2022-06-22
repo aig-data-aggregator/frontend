@@ -94,40 +94,41 @@ export default function CollectionsPage () {
                     <Stat>
                         <StatLabel>Floor</StatLabel>
                         <StatNumber>{collection.stats?.floorPrice ? <p>{collection.stats.floorPrice} ETH</p> : <></>}</StatNumber>
-                        <StatHelpText>
-                        <StatArrow type='decrease' />
-                        42.069%
-                        </StatHelpText>
+                        {/*<StatHelpText>
+                        <StatArrow type='increase' />
+                        69.420%
+                        </StatHelpText>*/}
                     </Stat>
 
                     <Stat>
                         <StatLabel>Owners</StatLabel>
                         <StatNumber>{collection.stats?.numOwners ? <p>{collection.stats.numOwners}</p> : <></>}</StatNumber>
-                        <StatHelpText>
+                        {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
-                        </StatHelpText>
+                        </StatHelpText>*/}
                     </Stat>
 
                     <Stat>
-                        <StatLabel>Sales</StatLabel>
-                        <StatNumber>{collection.stats ? (collection.stats['total'].sales ? <p>{collection.stats['total'].sales}</p> : <></>) : <></> }</StatNumber>
-                        <StatHelpText>
+                        <StatLabel>Daily Sales</StatLabel>
+                        <StatNumber>{collection.stats ? (collection.stats.day.sales ? <p>{collection.stats.day.sales} ETH</p> : <></>) : <></> }</StatNumber>
+                        {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
-                        </StatHelpText>
+                        </StatHelpText>*/}
                     </Stat>
 
                     <Stat>
-                        <StatLabel>Volume</StatLabel>
-                        <StatNumber>{collection.stats ? (collection.stats['total'].volume ? <p>{Math.round(collection.stats['total'].volume * 100) / 100} ETH</p> : <></>) : <></> }</StatNumber>
-                        <StatHelpText>
+                        <StatLabel>Daily Volume</StatLabel>
+                        <StatNumber>{collection.stats ? (collection.stats.day.volume ? <p>{Math.round(collection.stats.day.volume * 100) / 100} ETH</p> : <></>) : <></> }</StatNumber>
+                        {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
-                        </StatHelpText>
+                        </StatHelpText>*/}
                     </Stat>
                 </StatGroup>
                 {
+                    /*
                     collection.stats ?
                     ['day', 'week', 'month'].map(period => (
                         <div>
@@ -137,7 +138,7 @@ export default function CollectionsPage () {
                             { collection.stats[period].change ? <p>Change: {collection.stats[period].change}</p> : <></> }
                             { collection.stats[period].averagePrice ? <p>Average price: {collection.stats[period].averagePrice}</p> : <></> }
                         </div>
-                    )) : <></>
+                    )) : <></>*/
                 }
                 <Button onClick={fetchPrevPage} disabled={loadingPage}>Prev Page</Button>
                 <Button onClick={fetchNextPage} disabled={loadingPage}>Next Page</Button>

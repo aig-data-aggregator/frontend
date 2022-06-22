@@ -16,11 +16,9 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={theme}>
         <Fonts />
         <Head>
-            <Head>
             <link rel="preconnect" href="https://fonts.googleapis.com"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
-            <link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam&family=DM+Mono&display=swap" rel="stylesheet"/> 
-        </Head>
+            <link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam&family=DM+Mono&display=swap" rel="stylesheet"/>
         </Head>
         <Header />
         <Component {...pageProps} />

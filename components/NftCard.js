@@ -27,9 +27,9 @@ export default function NftCard({name, description, thumbnail, collectionAddress
                     >
                     <Text as="i">{description}</Text>
                 </Box>
-                <Box fontWeight="bold">
+                {/*<Box fontWeight="bold">
                     PRICE: 11 ETH
-                </Box>
+                </Box>*/}
                 <Link href={`/nft/${collectionAddress}/${nftId}`}>
                     <a style={{
                         color: "red",

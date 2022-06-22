@@ -98,6 +98,11 @@ const queryNftInfo = async (collectionAddress, nftId) => {
         },
         includeFullDetails: true
     })
+    if (info.token.token.description === null || info.token.token.description === undefined) {
+        // TODO: Query OpenSea/ethers, then do info.token.token.description = ...
+    }
+
+    console.log(info)
     return {
         name: info.token.token.name || `#${info.token.token.tokenId}`,
         description: info.token.token.description,
@@ -166,6 +171,7 @@ const queryOpenseaInfo = async (slug) => {
             marketCap: collectionInfo.stats.market_cap,
             numOwners: collectionInfo.stats.num_owners,
             totalSupply: collectionInfo.stats.total_supply,
+            count: collectionInfo.stats.count
         }
     }
 }
