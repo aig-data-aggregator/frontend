@@ -7,7 +7,7 @@ import { queryCollections, getCategories } from '../common/interface';
 import { useEffect, useState } from 'react';
 import CollectionCard from '../components/CollectionCard';
 import Header from '../components/Header';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, Checkbox } from '@chakra-ui/react';
 
 
 export default function Home() {
@@ -57,9 +57,9 @@ export default function Home() {
         <title>AIG Data</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box pt="5em">
-        {categories.map(category => <label key={category}><input type="checkbox" value={category} key={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}/>{category}</label>)}
-      </Box>
+      <Flex pt="6em" ml="1em" justify="center">
+        {categories.map(category => <Checkbox mr="2em" value={category} key={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}>{category}</Checkbox>)}
+      </Flex>
         <Flex m="1em" wrap="wrap" justify="space-around" align="center">
        {
             collections.map(
