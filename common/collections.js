@@ -37,7 +37,7 @@ export const collections = [
     {
         address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb",
         openseaSlug: "cryptopunks",
-        coverImage: "https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2FBdxvLseXcfl57BiuQcQYdJ64v-aI8din7WPk0Pgo3qQFhAUH-B6i-dCqqc_mCkRIzULmwzwecnohLhrcH8A9mpWIZqA7ygc52Sr81hE%3Ds10000?fit=max&h=120&w=120&auto=format&s=5eab9dfe19106ac590e683947112951b",
+        coverImage: "https://cryptonomist.ch/wp-content/uploads/2021/06/cryptopunk.jpg",
         name: "CryptoPunks",
         multiContract: false,
         description: "CryptoPunks launched as a fixed set of 10,000 items in mid-2017 and became one of the inspirations for the ERC-721 standard. They have been featured in places like The New York Times, Christie’s of London, Art|Basel Miami, and The PBS NewsHour.",
@@ -47,7 +47,7 @@ export const collections = [
     },
     {
         address: "0x23581767a106ae21c074b2276d25e5c3e136a68b",
-        coverImage: "https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2FH-eyNE1MwL5ohL-tCfn_Xa1Sl9M9B4612tLYeUlQubzt4ewhr4huJIR5OLuyO3Z5PpJFSwdm7rq-TikAh7f5eUw338A2cy6HRH75%3Ds10000?fit=max&h=120&w=120&auto=format&s=30f910b04fda1685d06e40aebce47db8",
+        coverImage: "https://velog.velcdn.com/images/dappfer_eth/post/93f4d5ae-9139-4cec-96a0-62c6038a471e/image.png",
         openseaSlug: "proof-moonbirds",
         name: "Moonbirds",
         multiContract: false,
@@ -68,7 +68,7 @@ export const collections = [
     },*/
     {
         address: "0xbce3781ae7ca1a5e050bd9c4c77369867ebc307e",
-        coverImage: "https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2Fcb_wdEAmvry_noTfeuQzhqKpghhZWQ_sEhuGS9swM03UM8QMEVJrndu0ZRdLFgGVqEPeCUzOHGTUllxug9U3xdvt0bES6VFdkRCKPqg%3Ds10000?fit=max&h=120&w=120&auto=format&s=ebe88742028e3978f1242641839f412c",
+        coverImage: "https://publish.one37pm.net/wp-content/uploads/2022/06/goblintown-nft-2.png?fit=750%2C750",
         name: "goblintown.wtf",
         openseaSlug: "goblintownwtf",
         multiContract: false,
