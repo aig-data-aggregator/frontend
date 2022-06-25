@@ -1,5 +1,6 @@
 - Fallback in case of unsupported collection (missing: get OpenSea slug of a specific contract)
 
+- Disable button if no new nfts are available
 -----
 - Historical Data
 - Rankings

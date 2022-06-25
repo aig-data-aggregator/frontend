@@ -14,7 +14,7 @@ export default function Header() {
             <Flex align="center" ml="2em">
                 <Link href="/" mr="2em">Collections</Link>
                 <Link mr="2em">Artworks</Link>
-                <Link mr="2em">Artists</Link>
+                <Link href="/artists" mr="2em">Artists</Link>
             </Flex>
         </Box>
         

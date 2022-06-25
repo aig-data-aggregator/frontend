@@ -1,5 +1,6 @@
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
 import { collections } from "./collections";
+import { artists } from "./artists";
 //import { collections as collectionsJson } from "../static/collections.json"
 
 const networkInfo = {
@@ -18,6 +19,10 @@ const zdk = new ZDK(args)
 
 const queryCollections = async () => {
     return collections
+}
+
+const queryArtists = async () => {
+    return artists
 }
 
 const addressToCollections = async (address) => {
@@ -49,6 +54,24 @@ const addressToCollections = async (address) => {
             platform: "",
             collectionUrl: null,
             nftUrl: null,
+            tags: []
+        }
+    }
+}
+
+const addressToArtist = async (address) => {
+    const artists = await queryArtists()
+    if(artists.map(artist=>artist.address).includes(address)) {
+        const matchingArtist = artists.filter(artist => artist.address === address)[0]
+        console.log(matchingArtist)
+        return matchingArtist
+    } else {
+        // fallback da finire
+        return {
+            address,
+            coverImage: "",
+            name: "",
+            description: "",
             tags: []
         }
     }
@@ -107,8 +130,8 @@ const queryNftInfo = async (collectionAddress, nftId) => {
         name: info.token.token.name || `#${info.token.token.tokenId}`,
         description: info.token.token.description,
         owner: info.token.token.owner,
-        minter: info.token.token.mintInfo.originatorAddress,
-        url: info.token.token.image.mediaEncoding.large,
+        minter: info.token.token.mintInfo?.originatorAddress,
+        url: info.token.token?.image?.mediaEncoding?.large,
         sales: info.token.sales.map(sale => ({
             buyer: sale.buyerAddress,
             seller: sale.sellerAddress,
@@ -176,4 +199,81 @@ const queryOpenseaInfo = async (slug) => {
     }
 }
 
-export { addressToCollections, queryCollections, queryNfts, queryNftInfo, getCategories }
+const nftsMintedByAddress = async (address, hashPage) => {
+    let options = {
+        where: {
+            minterAddresses: [address]
+        },
+        /*sort: {
+            sortKey: "MINTED"
+        },*/
+        pagination: {
+            limit: 50
+        },
+        nodes: {
+            collectionAddress: true,
+            
+            image: {
+                url: true
+            }
+        }
+    }
+    if(hashPage){
+        options.pagination = {
+            after: hashPage
+        }
+    }
+    const mints = await zdk.mints(options)
+    return {
+        nfts: mints.mints.nodes.map(node => ({
+            name: node.token.name || `#${node.token.tokenId}`,
+            tokenId: node.token.tokenId,
+            thumbnail: node.token?.image?.mediaEncoding?.poster,
+            description: node.token.description,
+            collectionAddress: node.token.collectionAddress
+        })),
+        nextPage: mints.mints.pageInfo.hasNextPage && mints.mints.pageInfo.endCursor
+    }
+}
+
+
+const nftsOwnedByAddress = async (address, hashPage) => {
+    let options = {
+        where: {
+            ownerAddresses: [address]
+        },
+        sort: {
+            sortKey: "MINTED"
+        },
+        pagination: {
+            limit: 50
+        },
+        nodes: {
+            image: {
+                url: true
+            }
+        }
+    }
+    if(hashPage){
+        options.pagination = {
+            after: hashPage
+        }
+    }
+    console.log(options)
+    let info = await zdk.tokens(options)
+    console.log(info)
+    return {
+        nfts: info.tokens.nodes.map(
+            nft => ({
+                name: nft.token.name || `#${nft.token.tokenId}`,
+                tokenId: nft.token.tokenId,
+                thumbnail: nft.token?.image?.mediaEncoding?.poster || nft.token?.image?.mediaEncoding?.original,
+                description: nft.token.description,
+                collectionAddress: nft.token.collectionAddress
+            })
+        ),
+        nextPage: info.tokens.pageInfo.hasNextPage && info.tokens.pageInfo.endCursor
+    }
+}
+
+export { addressToCollections, addressToArtist, queryCollections, queryNfts, queryNftInfo, getCategories, nftsOwnedByAddress, nftsMintedByAddress, queryArtists }
