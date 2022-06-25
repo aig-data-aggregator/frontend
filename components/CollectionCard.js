@@ -54,7 +54,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
                     <Text as="i">{description}</Text>
                 </Box>
                 <Box fontWeight="bold">
-                    {"Floor Price: " + (collection?.stats?.floorPrice || "NA")}
+                    {"Floor Price: " + ((collection?.stats?.floorPrice+" ETH") || "NA")}
                 </Box>
                 <Link href={`/collection/${address}`}>
                     <a style={{
