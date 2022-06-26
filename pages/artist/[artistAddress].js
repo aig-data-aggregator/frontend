@@ -30,7 +30,8 @@ export default function ArtistPage(){
         nftsMintedByAddress(artistAddress).then(newMinted => {
             setAllMinted([{
                 nfts: newMinted.nfts,
-                nextPage: newMinted.nextPage
+                nextPage: newMinted.nextPage,
+                hasNextPage: newMinted.hasNextPage
             }])
             setNftsMinted(newMinted.nfts)
             setPageIndexMinted(0)
@@ -38,7 +39,8 @@ export default function ArtistPage(){
         nftsOwnedByAddress(artistAddress).then(newOwned => {
             setAllOwned([{
                 nfts: newOwned.nfts,
-                nextPage: newOwned.nextPage
+                nextPage: newOwned.nextPage,
+                hasNextPage: newOwned.hasNextPage
             }])
             setNftsOwned(newOwned.nfts)
             setPageIndexOwned(0)
@@ -47,22 +49,24 @@ export default function ArtistPage(){
 
     async function fetchNextOwnedPage(){
         const newPageIndex = pageIndexOwned + 1
-        if(pageIndexOwned === allOwned.length - 1){
-            setLoadingOwned(true)
-            const newNftsOwned = await nftsOwnedByAddress(artistAddress, allOwned[pageIndexOwned].nextPage)
-            const actualNewNftsOwned = filterDuplicates(newNftsOwned.nfts, allOwned)
-            let newPages = {
-                nfts: actualNewNftsOwned,
-                nextPage: newNftsOwned.nextPage
+        if(allOwned[pageIndexOwned].hasNextPage){
+            if(pageIndexOwned === allOwned.length - 1){
+                setLoadingOwned(true)
+                const newNftsOwned = await nftsOwnedByAddress(artistAddress, allOwned[pageIndexOwned].nextPage)
+                const actualNewNftsOwned = filterDuplicates(newNftsOwned.nfts, allOwned)
+                let newPages = {
+                    nfts: actualNewNftsOwned,
+                    nextPage: newNftsOwned.nextPage
+                }
+                setAllOwned(prev => [...prev, newPages])
+                setPageIndexOwned(newPageIndex)
+                setNftsOwned(actualNewNftsOwned)
+                setLoadingOwned(false)
             }
-            setAllOwned(prev => [...prev, newPages])
-            setPageIndexOwned(newPageIndex)
-            setNftsOwned(actualNewNftsOwned)
-            setLoadingOwned(false)
-        }
-        else {
-            setPageIndexOwned(newPageIndex)
-            setNftsOwned(allOwned[newPageIndex].nfts)
+            else {
+                setPageIndexOwned(newPageIndex)
+                setNftsOwned(allOwned[newPageIndex].nfts)
+            }
         }
     }
 
@@ -74,22 +78,24 @@ export default function ArtistPage(){
 
     async function fetchNextMintedPage(){
         const newPageIndex = pageIndexMinted + 1
-        if(pageIndexMinted === allMinted.length - 1){
-            setLoadingMinted(true)
-            const newNftsMinted = await nftsMintedByAddress(artistAddress, allMinted[pageIndexMinted].nextPage)
-            const actualNewNftsMinted = filterDuplicates(newNftsMinted.nfts, allMinted)
-            let newPages = {
-                nfts: actualNewNftsMinted,
-                nextPage: newNftsMinted.nextPage
+        if(allMinted[pageIndexMinted].hasNextPage){
+            if(pageIndexMinted === allMinted.length - 1){
+                setLoadingMinted(true)
+                const newNftsMinted = await nftsMintedByAddress(artistAddress, allMinted[pageIndexMinted].nextPage)
+                const actualNewNftsMinted = filterDuplicates(newNftsMinted.nfts, allMinted)
+                let newPages = {
+                    nfts: actualNewNftsMinted,
+                    nextPage: newNftsMinted.nextPage
+                }
+                setAllMinted(prev => [...prev, newPages])
+                setPageIndexMinted(newPageIndex)
+                setNftsMinted(actualNewNftsMinted)
+                setLoadingMinted(false)
             }
-            setAllMinted(prev => [...prev, newPages])
-            setPageIndexMinted(newPageIndex)
-            setNftsMinted(actualNewNftsMinted)
-            setLoadingMinted(false)
-        }
-        else {
-            setPageIndexMinted(newPageIndex)
-            setNftsMinted(allMinted[newPageIndex].nfts)
+            else {
+                setPageIndexMinted(newPageIndex)
+                setNftsMinted(allMinted[newPageIndex].nfts)
+            }
         }
     }
 
@@ -108,8 +114,8 @@ export default function ArtistPage(){
     return (
         <div>
             <div style={{height:'200px'}} />
-            <Button onClick={fetchPrevOwnedPage} disabled={loadingOwned}>Prev Owned</Button>
-            <Button onClick={fetchNextOwnedPage} disabled={loadingOwned}>Next Owned</Button>
+            <Button onClick={fetchPrevOwnedPage} disabled={loadingOwned || pageIndexOwned===0}>Prev Owned</Button>
+            <Button onClick={fetchNextOwnedPage} disabled={loadingOwned || !allOwned[pageIndexOwned]?.hasNextPage}>Next Owned</Button>
             <div style={{
                     display: "flex",
                     flexWrap: "wrap",
@@ -121,8 +127,8 @@ export default function ArtistPage(){
                     <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
                 ))}
             </div>
-            <Button onClick={fetchPrevMintedPage} disabled={loadingMinted}>Prev Minted</Button>
-            <Button onClick={fetchNextMintedPage} disabled={loadingMinted}>Next Minted</Button>
+            <Button onClick={fetchPrevMintedPage} disabled={loadingMinted || pageIndexMinted===0}>Prev Minted</Button>
+            <Button onClick={fetchNextMintedPage} disabled={loadingMinted || !allMinted[pageIndexMinted]?.hasNextPage}>Next Minted</Button>
         
             <div style={{
                     display: "flex",

@@ -5,7 +5,7 @@ import ArtistCard from '../components/ArtistCard';
 import { Flex, Box } from '@chakra-ui/react';
 
 export default function artists(){
-    const [artist, setArtist] = useState([]);
+    const [artist, setArtist] = useState([])
     const fetchArtists = async () => {
         const newArtists = await queryArtists();
         setArtist(newArtists);

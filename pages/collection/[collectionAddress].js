@@ -18,14 +18,7 @@ export default function CollectionsPage () {
     const [allPages, setAllPages] = useState([])
     const [nfts, setNfts] = useState([])
     const [loadingPage, setLoadingPage] = useState(false)
-    /*
-    nftsPages
-        {
-            nfts: [],
-            nextPage: ""
-        }
-    */
-    // const [pageInfo, setPageInfo] = useState()
+
     const [collection, setCollection] = useState({
         name: "",
         description: ""
@@ -38,7 +31,8 @@ export default function CollectionsPage () {
         const newNfts = await queryNfts(collectionAddress)
         setAllPages([{
             nfts: newNfts.nfts,
-            nextPage: newNfts.nextPage
+            nextPage: newNfts.nextPage,
+            hasNextPage: newNfts.hasNextPage
         }])
         // console.log("new Pages: ", allPages)
         setNfts(newNfts.nfts)
@@ -54,21 +48,24 @@ export default function CollectionsPage () {
     
     async function fetchNextPage(){
         const newPageIndex = pageIndex + 1
-        if(pageIndex === allPages.length - 1){
-            setLoadingPage(true)
-            const newNfts = await queryNfts(collectionAddress, allPages[pageIndex].nextPage)
-            let newPages = {
-                nfts: newNfts.nfts,
-                nextPage: newNfts.nextPage
+        if(allPages[pageIndex].hasNextPage){
+            if(pageIndex === allPages.length - 1){
+                setLoadingPage(true)
+                const newNfts = await queryNfts(collectionAddress, allPages[pageIndex].nextPage)
+                let newPages = {
+                    nfts: newNfts.nfts,
+                    nextPage: newNfts.nextPage,
+                    hasNextPage: newNfts.hasNextPage
+                }
+                setAllPages(prev => [...prev, newPages])
+                setPageIndex(newPageIndex)
+                setNfts(newNfts.nfts)
+                setLoadingPage(false)    
             }
-            setAllPages(prev => [...prev, newPages])
-            setPageIndex(newPageIndex)
-            setNfts(newNfts.nfts)
-            setLoadingPage(false)    
-        }
-        else {
-            setPageIndex(newPageIndex)
-            setNfts(allPages[newPageIndex].nfts)
+            else {
+                setPageIndex(newPageIndex)
+                setNfts(allPages[newPageIndex].nfts)
+            }
         }
     }
     

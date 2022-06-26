@@ -63,7 +63,6 @@ const addressToArtist = async (address) => {
     const artists = await queryArtists()
     if(artists.map(artist=>artist.address).includes(address)) {
         const matchingArtist = artists.filter(artist => artist.address === address)[0]
-        console.log(matchingArtist)
         return matchingArtist
     } else {
         // fallback da finire
@@ -109,7 +108,8 @@ const queryNfts = async (collectionAddress, hashPage) => {
                 description: nft.token.description
             })
         ),
-        nextPage: info.tokens.pageInfo.hasNextPage && info.tokens.pageInfo.endCursor
+        hasNextPage: info.tokens.pageInfo.hasNextPage,
+        nextPage: info.tokens.pageInfo.endCursor
     }
 }
 
@@ -125,7 +125,6 @@ const queryNftInfo = async (collectionAddress, nftId) => {
         // TODO: Query OpenSea/ethers, then do info.token.token.description = ...
     }
 
-    console.log(info)
     return {
         name: info.token.token.name || `#${info.token.token.tokenId}`,
         description: info.token.token.description,
@@ -232,7 +231,8 @@ const nftsMintedByAddress = async (address, hashPage) => {
             description: node.token.description,
             collectionAddress: node.token.collectionAddress
         })),
-        nextPage: mints.mints.pageInfo.hasNextPage && mints.mints.pageInfo.endCursor
+        hasNextPage: mints.mints.pageInfo.hasNextPage,
+        nextPage: mints.mints.pageInfo.endCursor
     }
 }
 
@@ -259,9 +259,7 @@ const nftsOwnedByAddress = async (address, hashPage) => {
             after: hashPage
         }
     }
-    console.log(options)
     let info = await zdk.tokens(options)
-    console.log(info)
     return {
         nfts: info.tokens.nodes.map(
             nft => ({
@@ -272,7 +270,8 @@ const nftsOwnedByAddress = async (address, hashPage) => {
                 collectionAddress: nft.token.collectionAddress
             })
         ),
-        nextPage: info.tokens.pageInfo.hasNextPage && info.tokens.pageInfo.endCursor
+        hasNextPage: info.tokens.pageInfo.hasNextPage,
+        nextPage: info.tokens.pageInfo.endCursor
     }
 }
 
