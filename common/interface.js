@@ -280,4 +280,16 @@ const queryFeatured = async () => {
     return featured
 }
 
-export { addressToCollections, addressToArtist, queryCollections, queryNfts, queryNftInfo, getCategories, nftsOwnedByAddress, nftsMintedByAddress, queryArtists, queryFeatured }
+const queryTopCollections = async (period)=> {
+    if(period)
+        return await fetch(`https://api.cryptoslam.io/v1/collections/top-100?timeRange=${period}`).then(res => res.json())
+    else return []
+}
+
+export { addressToCollections, addressToArtist, 
+            queryCollections, queryNfts, queryNftInfo, 
+            getCategories, 
+            nftsOwnedByAddress, nftsMintedByAddress, 
+            queryArtists, queryFeatured,
+            queryTopCollections
+        }
