@@ -1,6 +1,7 @@
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
 import { collections } from "./collections";
 import { artists } from "./artists";
+import { featured } from "./featured";
 //import { collections as collectionsJson } from "../static/collections.json"
 
 const networkInfo = {
@@ -275,4 +276,8 @@ const nftsOwnedByAddress = async (address, hashPage) => {
     }
 }
 
-export { addressToCollections, addressToArtist, queryCollections, queryNfts, queryNftInfo, getCategories, nftsOwnedByAddress, nftsMintedByAddress, queryArtists }
+const queryFeatured = async () => {
+    return featured
+}
+
+export { addressToCollections, addressToArtist, queryCollections, queryNfts, queryNftInfo, getCategories, nftsOwnedByAddress, nftsMintedByAddress, queryArtists, queryFeatured }

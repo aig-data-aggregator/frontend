@@ -7,6 +7,6 @@
 - [later] ENS ✓
 
 - Artist info page
-  - All NFTs ever made
+  - All NFTs ever made ✓
   - Historical price
   - (list price?)
