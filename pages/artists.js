@@ -15,7 +15,7 @@ export default function Artists(){
         fetchArtists()
     })
     return (
-        <div>
+        <Box pt="4em">
             <Head>
                 <title>AIG Data</title>
                 <link rel="icon" href="/favicon.ico" />
@@ -31,6 +31,6 @@ export default function Artists(){
                 }
                 {/* {JSON.stringify(collectionInfos)} */}
             </Flex>
-        </div>
+        </Box>
     )
 }

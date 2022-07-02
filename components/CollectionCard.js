@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link"
 import { Box, Image, Badge, Text } from "@chakra-ui/react"
 import {addressToCollections} from "../common/interface"
+import { useRouter } from "next/router";
 
 export default function CollectionCard({name, coverUrl, description, address}) {
     const [collection, setCollection] = useState()
@@ -11,11 +12,13 @@ export default function CollectionCard({name, coverUrl, description, address}) {
         setCollection(singleCollectionInfo)
     }
 
+    const router = useRouter()
+
     useEffect(()=>{
         queryCollection()
     },[])
     return (
-        <Box w="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" h="md">
+        <Box w="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" h="md" onClick={() => router.push(`/collection/${address}`)} cursor="pointer">
             <Image src={coverUrl} fallbackSrc="https://via.placeholder.com/500" alt={"Collection's Cover image"} w="100%" h="15em" overflow="hidden" objectFit="cover" />
             <Box p="6">
                 <Box display="flex" alignItems="baseline">
@@ -56,12 +59,6 @@ export default function CollectionCard({name, coverUrl, description, address}) {
                 <Box fontWeight="bold">
                     {"Floor Price: " + ((collection?.stats?.floorPrice+" ETH") || "NA")}
                 </Box>
-                <Link href={`/collection/${address}`}>
-                    <a style={{
-                        color: "red",
-                        textDecoration: "underline"
-                    }}>See more</a>
-                </Link>
             </Box>
         </Box>
     )

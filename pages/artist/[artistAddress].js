@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import NftCard from '../../components/NftCard';
-import {Button} from "@chakra-ui/react";
+import {Button, Box} from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex} from '@chakra-ui/react'
 
 import { nftsOwnedByAddress, nftsMintedByAddress } from '../../common/interface'
 
@@ -112,35 +113,52 @@ export default function ArtistPage(){
     }, [artistAddress])
 
     return (
-        <div>
-            <div style={{height:'200px'}} />
-            <Button onClick={fetchPrevOwnedPage} disabled={loadingOwned || pageIndexOwned===0}>Prev Owned</Button>
-            <Button onClick={fetchNextOwnedPage} disabled={loadingOwned || !allOwned[pageIndexOwned]?.hasNextPage}>Next Owned</Button>
-            <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    margin: "auto",
-                    alignItems: "center",
-                }}>
-                {nftsOwned.map(nft => (
-                    <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
-                ))}
-            </div>
-            <Button onClick={fetchPrevMintedPage} disabled={loadingMinted || pageIndexMinted===0}>Prev Minted</Button>
-            <Button onClick={fetchNextMintedPage} disabled={loadingMinted || !allMinted[pageIndexMinted]?.hasNextPage}>Next Minted</Button>
-        
-            <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    margin: "auto",
-                    alignItems: "center",
-                }}>
-                {nftsMinted.map(nft => (
-                    <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
-                ))}
-            </div>
-        </div>
+        <Box pt="5em">
+            <Tabs variant="soft-rounded" align="center" p="2">
+                <TabList>
+                    <Tab>Minted</Tab>
+                    <Tab>Collected</Tab>
+                </TabList>
+
+                <TabPanels>
+                    <TabPanel>
+                        <Flex align="end" justify="flex-end">
+                            <Button mr="1em" onClick={fetchPrevMintedPage} disabled={loadingMinted || pageIndexMinted===0}>Prev</Button>
+                            <Button onClick={fetchNextMintedPage} disabled={loadingMinted || !allMinted[pageIndexMinted]?.hasNextPage}>Next</Button>
+                        </Flex>
+                                                <Box style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "space-between",
+                                margin: "auto",
+                                alignItems: "center",
+                            }}>
+                            {nftsMinted.map(nft => (
+                                <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
+                            ))}
+                        </Box>
+                    </TabPanel>
+                    <TabPanel>
+                        <Flex align="end" justify="flex-end">
+                            <Button mr="1em" onClick={fetchPrevOwnedPage} disabled={loadingOwned || pageIndexOwned===0}>Prev</Button>
+                            <Button onClick={fetchNextOwnedPage} disabled={loadingOwned || !allOwned[pageIndexOwned]?.hasNextPage}>Next</Button>
+                        </Flex>
+                       <Box style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "space-between",
+                                margin: "auto",
+                                alignItems: "center",
+                            }}>
+                            {nftsOwned.map(nft => (
+                                <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
+                            ))}
+                        </Box>
+                    </TabPanel>
+                </TabPanels>
+                </Tabs>
+            
+           
+        </Box>
     )
 }

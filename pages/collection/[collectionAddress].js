@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import NftCard from '../../components/NftCard';
 
 import { addressToCollections, queryNfts } from '../../common/interface'
-import { Box, Button, Image, Heading } from "@chakra-ui/react";
+import { Box, Button, Image, Heading, Flex } from "@chakra-ui/react";
 import {
   Stat,
   StatLabel,
@@ -137,8 +137,11 @@ export default function CollectionsPage () {
                         </div>
                     )) : <></>*/
                 }
-                <Button onClick={fetchPrevPage} disabled={loadingPage}>Prev Page</Button>
-                <Button onClick={fetchNextPage} disabled={loadingPage}>Next Page</Button>
+                <Flex justify="flex-end" m="1em">
+                    <Button mr="1em" onClick={fetchPrevPage} disabled={loadingPage}>Prev Page</Button>
+                    <Button onClick={fetchNextPage} disabled={loadingPage}>Next Page</Button>
+                </Flex>
+                
                 <div style={{
                     display: "flex",
                     flexWrap: "wrap",
