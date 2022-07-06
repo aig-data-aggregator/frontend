@@ -4,7 +4,7 @@ import {queryArtists} from '../common/interface'
 import ArtistCard from '../components/ArtistCard';
 import { Flex, Box } from '@chakra-ui/react';
 
-export default function artists(){
+export default function Artists(){
     const [artist, setArtist] = useState([])
     const fetchArtists = async () => {
         const newArtists = await queryArtists();
@@ -15,7 +15,7 @@ export default function artists(){
         fetchArtists()
     })
     return (
-        <div>
+        <Box pt="4em">
             <Head>
                 <title>AIG Data</title>
                 <link rel="icon" href="/favicon.ico" />
@@ -31,6 +31,6 @@ export default function artists(){
                 }
                 {/* {JSON.stringify(collectionInfos)} */}
             </Flex>
-        </div>
+        </Box>
     )
 }

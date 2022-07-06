@@ -1,10 +1,11 @@
 import Head from 'next/head'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {queryFeatured, queryNftInfo} from '../common/interface'
 import { Flex, Box } from '@chakra-ui/react';
 import NftCard from '../components/NftCard';
 
-export default function artworks(){
+
+export default function Artworks() {
     const [featured, setFeatured] = useState([])
     const [nftInfos, setNftInfos] = useState({})
 
@@ -30,6 +31,7 @@ export default function artworks(){
     useEffect(() => {
         fetchFeatured()
     }, [])
+
     return (
         <div>
             <Head>
@@ -37,7 +39,7 @@ export default function artworks(){
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <h1>Featured NFTs</h1>
-            <Flex m="1em" wrap="wrap" justify="space-around" align="center">
+            <Flex m="1em" wrap="wrap" justify="space-around" align="center" pt="3em">
             {
                     featured.map((nft) => ({...nft, ...getInfo(nft.collectionAddress, nft.tokenId)})).map(
                         nftInfo => 
