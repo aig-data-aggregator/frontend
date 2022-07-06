@@ -75,6 +75,7 @@ export default function Header() {
                 <Link href="/topCollections" mr="2em">Top 100 Collections</Link>
                 <Link href="/artworks" mr="2em">Artworks</Link>
                 <Link href="/artists" mr="2em">Artists</Link>
+                {session?.user && <Link href={"/artist/"+session.address} mr="2em">Personal page</Link>}
             </Flex>
             
             {!session && (
