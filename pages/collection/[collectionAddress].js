@@ -34,7 +34,6 @@ export default function CollectionsPage () {
             nextPage: newNfts.nextPage,
             hasNextPage: newNfts.hasNextPage
         }])
-        // console.log("new Pages: ", allPages)
         setNfts(newNfts.nfts)
         setPageIndex(0)
         setCollection(await addressToCollections(collectionAddress))

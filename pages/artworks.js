@@ -17,8 +17,6 @@ export default function artworks(){
                 setNftInfos(currentInfos => {
                     const updatedInfos = {...currentInfos}
                     updatedInfos[[nft.collectionAddress, nft.tokenId]] = info
-                    console.log('Done!')
-                    console.log(updatedInfos)
                     return updatedInfos
                 })
             })

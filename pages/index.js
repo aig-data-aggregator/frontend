@@ -1,12 +1,9 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 
 import { queryCollections, getCategories } from '../common/interface';
 
 import { useEffect, useState } from 'react';
 import CollectionCard from '../components/CollectionCard';
-import Header from '../components/Header';
 import { Flex, Box, Checkbox } from '@chakra-ui/react';
 
 

@@ -5,20 +5,6 @@ import { addressToCollections, queryNftInfo } from '../../../common/interface.js
 import { Box, Heading, Flex, Image, Text, Link } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 
-// const networkInfo = {
-//     network: ZDKNetwork.Ethereum,
-//     chain: ZDKChain.Mainnet,
-// }
-
-// const API_ENDPOINT = "https://api.zora.co/graphql";
-// const args = { 
-//               endPoint:API_ENDPOINT, 
-//               networks:[networkInfo], 
-//               apiKey: process.env.API_KEY 
-//             } 
-
-// const zdk = new ZDK(args)
-
 export default function NftPage () {
     const router = useRouter()
     const { collectionAddress, nftId } = router.query
