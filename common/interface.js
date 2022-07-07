@@ -19,7 +19,8 @@ const args = {
 const zdk = new ZDK(args)
 
 const queryCollections = async () => {
-    return collections
+    const collections = await fetch('/api/collections').then(res=>res.json())
+    return collections.map(collection => ({...collection, address: collection._id}))
 }
 
 const queryArtists = async () => {
