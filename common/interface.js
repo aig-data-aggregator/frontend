@@ -286,10 +286,24 @@ const queryTopCollections = async (period)=> {
     else return []
 }
 
+const queryModerators = async () => {
+    const moderators = await fetch('/api/moderators').then(res => res.json())
+    return moderators.map(moderator => ({
+        address: moderator._id
+    }))
+}
+
+const querySingleArtist = async (artistAddress) => {
+    const artist = await fetch('/api/artists/'+artistAddress).then(res => res.json())
+    return artist
+}
+
 export { addressToCollections, addressToArtist, 
             queryCollections, queryNfts, queryNftInfo, 
             getCategories, 
             nftsOwnedByAddress, nftsMintedByAddress, 
             queryArtists, queryFeatured,
-            queryTopCollections
+            queryTopCollections,
+            queryModerators,
+            querySingleArtist
         }

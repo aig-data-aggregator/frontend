@@ -1,9 +1,17 @@
 import { getSession } from "next-auth/react"
 import clientPromise from "../../../common/mongodb"
+/*import Joi from "joi"
+
+const artistSchema = Joi.object({
+    name: Joi.string().default(''),
+    description: Joi.string().default(''),
+    openSeaSlug: Joi.
+})*/
 
 async function postArtist(req, res, session, artistCollection) {
-    
-    if(session?.address !== req.query.artistAddress){
+    const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
+    const moderators = await moderatorCollection.find({}).toArray()
+    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
         res.status(401).json({error:"Unauthorized"})
     }
     else{
@@ -23,7 +31,8 @@ async function postArtist(req, res, session, artistCollection) {
 }
 
 async function getArtist(req, res, artistCollection){
-    
+    const response = await artistCollection.findOne({_id: req.query.artistAddress})
+    res.status(200).json(response)
 }
 
 export default async (req, res) => {

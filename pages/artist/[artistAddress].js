@@ -119,7 +119,7 @@ export default function ArtistPage(){
         <Box pt="5em">
             <div style={{height:"200px"}}></div>
             <Tabs variant="soft-rounded" align="center" p="2">
-                { session.user && session.address === artistAddress && <a href={`/artist/${artistAddress}/edit`}>Edit</a>}
+                { session?.user && session?.address === artistAddress && <a href={`/artist/${artistAddress}/edit`}>Edit</a>}
                 <TabList>
                     <Tab>Minted</Tab>
                     <Tab>Collected</Tab>
