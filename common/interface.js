@@ -24,7 +24,8 @@ const queryCollections = async () => {
 }
 
 const queryArtists = async () => {
-    return artists
+    const artists = await fetch('/api/artists').then(res=>res.json())
+    return artists.map(artists => ({...artists, address: artists._id}))
 }
 
 const addressToCollections = async (address) => {

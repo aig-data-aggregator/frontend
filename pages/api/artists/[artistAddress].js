@@ -35,6 +35,31 @@ async function getArtist(req, res, artistCollection){
     res.status(200).json(response)
 }
 
+async function modifyArtist(req, res, session, artistCollection){
+    const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
+    const moderators = await moderatorCollection.find({}).toArray()
+    console.log(req.query)
+    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
+        res.status(401).json({error:"Unauthorized"})
+    }
+    else {
+        try {
+            console.log(req.body, req.query.artistAddress)
+            const response = await artistCollection.findOneAndUpdate(
+                {_id: req.query.artistAddress},
+                {
+                    $set: req.body
+                }
+            )
+            res.status(200).json(response)
+        } catch (e) {
+            console.log('ERROR')
+            console.log(e)
+            res.status(500).json({error: e.message})
+        }
+    }
+}
+
 export default async (req, res) => {
     const mongo = await clientPromise
     const artistCollection = mongo.db('dev').collection('artists')
@@ -45,6 +70,9 @@ export default async (req, res) => {
         break;
         case 'GET':
             await getArtist(req, res, artistCollection)
+        break;
+        case 'PUT':
+            await modifyArtist(req, res,session, artistCollection)
         break;
         default:
             res.status(405).send({ message: 'Method not allowed' })

@@ -95,11 +95,16 @@ const useEns = () => {
     }
 
     const getTextAsync = async (address, field) => {
-        if (address.startsWith('0x')) {
-            address = await lookupEnsAsync(address)
+        try{
+            if (address.startsWith('0x')) {
+                address = await lookupEnsAsync(address)
+            }
+            const resolver = await ensProvider.getResolver(address)
+            return await resolver.getText(field)
+        } catch (e) {
+            console.log(e)
+            return null
         }
-        const resolver = await ensProvider.getResolver(address)
-        return await resolver.getText(field)
     }
 
     return { lookupEns, lookupEnsAsync, invalidateEns, resolveAsync, getAvatarAsync, getTextAsync };

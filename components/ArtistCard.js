@@ -5,22 +5,13 @@ import {addressToArtist} from "../common/interface"
 import { useEns } from "../common/ens";
 import { useRouter } from "next/router";
 
-export default function ArtistCard({name, coverUrl, description, address}) {
+export default function ArtistCard({name, coverImage, description, address, tags}) {
     const [artist, setArtist] = useState()
     const [avatar, setAvatar] = useState()
     const [artistEmail, setArtistEmail] = useState()
     const [artistTwitter, setArtistTwitter] = useState()
     const { getAvatarAsync, getTextAsync } = useEns()
 
-    const queryArtist = async () => {
-        const singleArtistInfo = await addressToArtist(address)
-        setArtist(singleArtistInfo)
-    }
-
-
-    useEffect(() => {
-        queryArtist()
-    },[])
 
     useEffect(() => {
         getAvatarAsync(address).then(newAvatar => setAvatar(newAvatar))
@@ -32,10 +23,10 @@ export default function ArtistCard({name, coverUrl, description, address}) {
 
     return (
         <Box w="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" h="md" onClick={() => router.push(`/artist/${address}`)} cursor="pointer">
-            <Image src={coverUrl || avatar} fallbackSrc="https://via.placeholder.com/500" alt={"Artist's Cover image"} w="100%" h="15em" overflow="hidden" objectFit="cover" />
+            <Image src={coverImage || avatar} fallbackSrc="https://via.placeholder.com/500" alt={"Artist's Cover image"} w="100%" h="15em" overflow="hidden" objectFit="cover" />
             <Box p="6">
                 <Box display="flex" alignItems="baseline">
-                    {artist?.tags.map(tag=>
+                    {tags.map(tag=>
                         <Badge borderRadius="full" px="2" colorScheme="teal" key={tag}>{tag}</Badge>
                     )}  
                     <Box

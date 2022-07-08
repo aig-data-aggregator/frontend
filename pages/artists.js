@@ -25,7 +25,7 @@ export default function Artists(){
                     artist.map(
                         artistInfo => 
                         <Box my="1em" key={artistInfo.address}>
-                            <ArtistCard key={artistInfo.address} name={artistInfo.name} description={artistInfo.description} address={artistInfo.address} coverUrl={artistInfo.coverImage}/>
+                            <ArtistCard key={artistInfo.address} {...artistInfo}/>
                         </Box>
                     )
                 }
