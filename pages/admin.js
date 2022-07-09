@@ -8,27 +8,60 @@ export default function Admin() {
     const [artists, setArtists] = useState(null)
     const {data: session} = useSession()
 
+    async function fetchModerators() {
+        const newModerators = await queryModerators()
+        setModerators(newModerators)
+    }
+
+    async function fetchCollections() {
+        const newCollections = await queryCollections()
+        setCollections(newCollections)
+    }
+
+    async function fetchArtists() {
+        const newArtists = await queryArtists()
+        setArtists(newArtists)
+    }
+
     async function addModerator(e) {
         e.preventDefault()
         const formData = new FormData(e.target)
         const moderator = {
             _id: formData.get("address")
         }
-        const response = await fetch('/api/moderators/', {
+        await fetch('/api/moderators/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(moderator)
         })
-        const parsedResponse = await response.json()
+        await fetchModerators()
+        e.target.reset()
+    }
 
-        console.log('Response:', parsedResponse)
-        if (parsedResponse.upsertedId) {
-            setModerators(currentModerators => [...currentModerators, {
-                address: parsedResponse.upsertedId
-            }])
+    async function editModerator(e, _id) {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const collection = {
+            address: formData.get("address")
         }
+        await fetch('/api/moderators/' + _id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(collection)
+        })
+        await fetchModerators()
+    }
+
+    async function deleteModerator(e, _id) {
+        e.preventDefault()
+        await fetch('/api/moderators/' + _id, {
+            method: 'DELETE'
+        })
+        await fetchModerators()
     }
 
     async function addCollection(e) {
@@ -46,21 +79,23 @@ export default function Admin() {
             openseaSlug: formData.get("openseaSlug"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
-        const response = await fetch('/api/collections/', {
+        await fetch('/api/collections/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(collection)
         })
-        const parsedResponse = await response.json()
+        await fetchCollections()
+        e.target.reset()
+    }
 
-        console.log('Response:', parsedResponse)
-        if (parsedResponse.upsertedId) {
-            /*setModerators(currentModerators => [...currentModerators, {
-                address: parsedResponse.upsertedId
-            }])*/
-        }
+    async function deleteCollection(e, _id) {
+        e.preventDefault()
+        await fetch('/api/collections/' + _id, {
+            method: 'DELETE'
+        })
+        await fetchCollections()
     }
 
     async function addArtist(e) {
@@ -73,28 +108,22 @@ export default function Admin() {
             coverImage: formData.get("coverImage"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
-        const response = await fetch('/api/artists/', {
+        await fetch('/api/artists/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(artist)
         })
-        const parsedResponse = await response.json()
-
-        console.log('Response:', parsedResponse)
-        if (parsedResponse.upsertedId) {
-            /*setModerators(currentModerators => [...currentModerators, {
-                address: parsedResponse.upsertedId
-            }])*/
-        }
+        await fetchArtists()
+        e.target.reset()
     }
 
     async function editCollection(e, address) {
         e.preventDefault()
         const formData = new FormData(e.target)
         const collection = {
-            address,
+            address: formData.get("address"),
             name: formData.get("name"),
             description: formData.get("description"),
             coverImage: formData.get("coverImage"),
@@ -105,45 +134,48 @@ export default function Admin() {
             openseaSlug: formData.get("openseaSlug"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
-        console.log(collection)
-        const response = await fetch('/api/collections/' + address, {
+        await fetch('/api/collections/' + address, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(collection)
         })
-        const parsedResponse = await response.json()
-
-        console.log('Response:', parsedResponse)
+        await fetchCollections()
     }
 
     async function editArtist(e, address) {
         e.preventDefault()
         const formData = new FormData(e.target)
         const artist = {
+            address: formData.get("address"),
             name: formData.get("name"),
             description: formData.get("description"),
             coverImage: formData.get("coverImage"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
-        console.log(artist)
-        const response = await fetch('/api/artists/' + address, {
+        await fetch('/api/artists/' + address, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(artist)
         })
-        const parsedResponse = await response.json()
+        await fetchArtists()        
+    }
 
-        console.log('Response:', parsedResponse)
+    async function deleteArtist(e, _id) {
+        e.preventDefault()
+        await fetch('/api/artists/' + _id, {
+            method: 'DELETE'
+        })
+        await fetchArtists()
     }
 
     useEffect(() => {
-        queryModerators().then(newModerators => setModerators(newModerators))
-        queryCollections().then(newCollections => setCollections(newCollections))
-        queryArtists().then(newArtists => setArtists(newArtists))
+        fetchModerators()
+        fetchCollections()
+        fetchArtists()
     }, [])
 
     return (
@@ -158,7 +190,14 @@ export default function Admin() {
                         moderators.find(x => x.address == session?.address) ? (
                             <div>
                                 <p>Current moderators:</p>
-                                {moderators.map(moderator => <p key={moderator.address}>{moderator.address}</p>)}
+                                {moderators.map(moderator => (
+                                    <form key={moderator.address} onSubmit={(e) => editModerator(e, moderator.address)}>
+                                        <label>Address <input defaultValue={moderator.address} name="address" /></label>
+                                        <button type="submit">Edit</button>
+                                        <button onClick={(e) => deleteModerator(e, moderator.address) }>Delete</button>
+                                    </form>
+                                    )
+                                )}
                                 <form onSubmit={addModerator}>
                                     <p>Add new</p>
                                     <label>Address: <input type="text" name="address" /></label>
@@ -170,7 +209,7 @@ export default function Admin() {
                                         collections &&
                                         collections.map(collection => (
                                             <form onSubmit={e => editCollection(e, collection._id)} key={collection.address}>
-                                                <p>{collection.address}</p>
+                                                <label>Address <input defaultValue={collection.address} name="address" /></label>
                                                 <label>Name <input defaultValue={collection.name} name="name"/></label>
                                                 <label>Description <input defaultValue={collection.description} name="description"/></label>
                                                 <label>Cover Image <input defaultValue={collection.coverImage} name="coverImage"/></label>
@@ -182,6 +221,7 @@ export default function Admin() {
                                                 <label>Tags <input defaultValue={collection.tags} name="tags"/></label>
                                                 <button type="reset">Discard Changes</button>
                                                 <button type="submit">Edit</button>
+                                                <button onClick={(e) => deleteCollection(e, collection._id)}>Delete</button>
                                                 <div style={{height:"50px"}}></div>
                                             </form>
                                         ))
@@ -206,8 +246,8 @@ export default function Admin() {
                                     {
                                         artists &&
                                         artists.map(artist => (
-                                            <form onSubmit={e => editArtist(e, artist._id)} key={artist.address}>
-                                                <p>{artist.address}</p>
+                                            <form onSubmit={e => editArtist(e, artist.address)} key={artist.address}>
+                                                <label>Address <input defaultValue={artist.address} name="address" /></label>
                                                 <label>Name <input defaultValue={artist.name} name="name"/></label>
                                                 <label>Description <input defaultValue={artist.description} name="description"/></label>
                                                 <label>Cover Image <input defaultValue={artist.coverImage} name="coverImage"/></label>
@@ -215,6 +255,7 @@ export default function Admin() {
                                                 <label>Tags <input defaultValue={artist.tags} name="tags"/></label>
                                                 <button type="reset">Discard Changes</button>
                                                 <button type="submit">Edit</button>
+                                                <button onClick={(e) => deleteArtist(e, artist.address)}>Delete</button>
                                                 <div style={{height:"50px"}}></div>
                                             </form>
                                         ))

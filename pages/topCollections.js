@@ -12,7 +12,6 @@ export default function TopCollections() {
         setPeriod(newPeriod);
         const newCollections = await queryTopCollections(newPeriod)
         setCollections(newCollections);
-        console.log(newCollections)
     }
 
     useEffect(() => {

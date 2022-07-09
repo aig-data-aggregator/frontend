@@ -23,7 +23,6 @@ export default function EditArtistPage(){
             email: formData.get("email"),
             twitter: formData.get("twitter")
         }
-        console.log(artist)
         fetch('/api/artists/' + artistAddress, {
             method: 'POST',
             headers: {

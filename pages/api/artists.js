@@ -10,7 +10,7 @@ async function postArtist(req, res, session, artistCollection) {
     else {
         try {
             const response = await artistCollection.update(
-                {_id: req.body._id},
+                {_id: req.body.address},
                 {
                     $setOnInsert: req.body
                 },

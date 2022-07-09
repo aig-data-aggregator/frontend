@@ -45,11 +45,42 @@ async function modifyArtist(req, res, session, artistCollection){
     else {
         try {
             console.log(req.body, req.query.artistAddress)
-            const response = await artistCollection.findOneAndUpdate(
-                {_id: req.query.artistAddress},
-                {
-                    $set: req.body
-                }
+            if(req.body.address !== req.query.artistAddress){
+                // address changed
+                let oldArtist = await artistCollection.findOne({_id: req.query.artistAddress})
+                oldArtist._id = req.body.address
+                await artistCollection.insertOne(oldArtist)
+                const response = await artistCollection.deleteOne({_id: req.query.artistAddress})
+                res.status(200).json(response)
+            }
+            else {
+                const response = await artistCollection.findOneAndUpdate(
+                    {_id: req.query.artistAddress},
+                    {
+                        $set: req.body
+                    }
+                )
+                res.status(200).json(response)
+            }
+        } catch (e) {
+            console.log('ERROR')
+            console.log(e)
+            res.status(500).json({error: e.message})
+        }
+    }
+}
+
+async function deleteArtist(req, res, session, artistCollection){
+    const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
+    const moderators = await moderatorCollection.find({}).toArray()
+    if(!moderators.find(moderator => moderator._id === session.address)){
+        res.status(401).json({error:"Unauthorized"})
+    }
+    else {
+        try {
+            console.log(req.query.artistAddress)
+            const response = await artistCollection.findOneAndDelete(
+                {_id: req.query.artistAddress}
             )
             res.status(200).json(response)
         } catch (e) {
@@ -73,6 +104,9 @@ export default async (req, res) => {
         break;
         case 'PUT':
             await modifyArtist(req, res,session, artistCollection)
+        break;
+        case 'DELETE':
+            await deleteArtist(req, res, session, artistCollection)
         break;
         default:
             res.status(405).send({ message: 'Method not allowed' })
