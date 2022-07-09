@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { queryCollections, queryModerators, queryArtists } from "../common/interface"
+import { queryCollections, queryModerators, queryArtists, queryNews } from "../common/interface"
 import { useSession } from "next-auth/react"
 
 export default function Admin() {
     const [moderators, setModerators] = useState(null)
     const [collections, setCollections] = useState(null)
     const [artists, setArtists] = useState(null)
+    const [news, setNews] = useState(null)
     const {data: session} = useSession()
 
     async function fetchModerators() {
@@ -21,6 +22,11 @@ export default function Admin() {
     async function fetchArtists() {
         const newArtists = await queryArtists()
         setArtists(newArtists)
+    }
+
+    async function fetchNews() {
+        const newNews = await queryNews()
+        setNews(newNews)
     }
 
     async function addModerator(e) {
@@ -172,10 +178,57 @@ export default function Admin() {
         await fetchArtists()
     }
 
+    async function addNews(e) {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const news = {
+            date: formData.get("date"),
+            url: formData.get("url"),
+            tags: formData.get("tags").split(',').map(tag => tag.trim())
+        }
+        await fetch('/api/news/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(news)
+        })
+        await fetchNews()
+        e.target.reset()
+    }
+
+    async function editNews(e, _id) {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const collection = {
+            date: formData.get("date"),
+            url: formData.get("url"),
+            tags: formData.get("tags").split(',').map(tag => tag.trim())
+        }
+        await fetch('/api/news/' + _id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(collection)
+        })
+        await fetchNews()
+        e.target.reset()
+    }
+
+    async function deleteNews(e, _id) {
+        e.preventDefault()
+        await fetch('/api/news/' + _id, {
+            method: 'DELETE'
+        })
+        await fetchNews()
+    }
+
     useEffect(() => {
         fetchModerators()
         fetchCollections()
         fetchArtists()
+        fetchNews()
     }, [])
 
     return (
@@ -269,6 +322,31 @@ export default function Admin() {
                                     <label>Cover Image: <input type="text" name="coverImage" /></label>
                                     <label>OpenSea Slug <input name="openseaSlug"/></label>
                                     <label>Tags <input name="tags"/></label>
+                                    <input type="submit" value="Add"/>
+                                </form>
+
+                                <div>
+                                    <h3>All news:</h3>
+                                    {
+                                        news &&
+                                        news.map(newsItem => (
+                                            <form onSubmit={e => editNews(e, newsItem._id)} key={newsItem._id}>
+                                                <label>Date <input defaultValue={newsItem.date} type="date" name="date" /></label>
+                                                <label>URL <input defaultValue={newsItem.url} name="url" /></label>
+                                                <label>Tags <input defaultValue={newsItem.tags} name="tags"/></label>
+                                                <button type="reset">Discard Changes</button>
+                                                <button type="submit">Edit</button>
+                                                <button onClick={(e) => deleteNews(e, newsItem._id)}>Delete</button>
+                                                <div style={{height:"50px"}}></div>
+                                            </form>
+                                        ))
+                                    }
+                                </div>
+                                <form onSubmit={addNews}>
+                                    <h3>Add new News item</h3>
+                                    <label>Date: <input type="date" name="date" /></label>
+                                    <label>Url: <input type="text" name="url" /></label>
+                                    <label>Tags: <input type="text" name="tags" /></label>
                                     <input type="submit" value="Add"/>
                                 </form>
                             </div>

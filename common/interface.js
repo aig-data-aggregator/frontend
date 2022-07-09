@@ -300,6 +300,11 @@ const querySingleArtist = async (artistAddress) => {
     return artist
 }
 
+const queryNews = async () => {
+    const news = await fetch('/api/news').then(res => res.json())
+    return news
+}
+
 export { addressToCollections, addressToArtist, 
             queryCollections, queryNfts, queryNftInfo, 
             getCategories, 
@@ -307,5 +312,6 @@ export { addressToCollections, addressToArtist,
             queryArtists, queryFeatured,
             queryTopCollections,
             queryModerators,
-            querySingleArtist
+            querySingleArtist,
+            queryNews
         }
