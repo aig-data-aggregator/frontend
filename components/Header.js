@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Flex, Spacer, Heading, HStack, Link, Input, Button, Box } from "@chakra-ui/react"
+import { Flex, Spacer, Heading, HStack, Link, Input, Button, Box, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router";
 import { useEns } from "../common/ens";
 import { useReadProvider } from "../common/provider";
@@ -7,6 +7,7 @@ import { signOut, useSession } from "next-auth/react"
 import { getCsrfToken, signIn } from 'next-auth/react'
 import { SiweMessage } from 'siwe'
 import { useConnect, useSignMessage } from 'wagmi'
+import truncateEthAddress from 'truncate-eth-address'
 
 export default function Header() {
     const router = useRouter()
@@ -61,14 +62,45 @@ export default function Header() {
 
     return (
         <Box pos="fixed" w="100%" mb="1em" borderBottom="1px" borderColor="#ccc" bg="white" zIndex={69}>
-            <Flex align="center" direction="row" p="0.2em" pl="1em" >
-                <Link href="/"><Heading>AIG</Heading></Link>
+            <Flex align="center" direction="row" p="0.2em" pl="1em" justify="space-between">
+                <Link href="/">
+                    <Heading>AIG</Heading>
+                </Link>
                 <form onSubmit={search}>
-                    <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Insert address or ENS" mx="2em" />
+                    <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Insert address or ENS" mx="2em" width="xl" />
                 </form>
-                <Flex justify="right" align="center" mr="3">
-                    <Button colorScheme="teal" bgColor="black">Connect Wallet</Button>
-                </Flex>
+                <Box>
+                    {!session && (
+                        <Button mr="2"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                handleLogin()
+                            }}
+                            >
+                            Sign-In with Ethereum
+                        </Button>
+                    )}
+                    {session?.user && (
+                        <Flex>
+                            {session.user.image && (
+                                <></>// <img src={session.user.image} /> 
+                            )}
+                            <Box mr="2">
+                                <Text fontSize="xs">Signed in as</Text>
+                                <Text fontSize="s" lineHeight="0.8">{session.user.email ?? truncateEthAddress(session.user.name)}</Text>
+                            </Box>
+                            <Button mr="2"
+                                href={`/api/auth/signout`}
+                                onClick={(e) => {
+                                e.preventDefault()
+                                signOut()
+                                }}
+                            >
+                                Sign out
+                            </Button>
+                        </Flex>
+                    )}
+                </Box>
             </Flex>
             <Flex align="center" ml="2em">
                 <Link href="/" mr="2em">Collections</Link>
@@ -77,40 +109,8 @@ export default function Header() {
                 <Link href="/artists" mr="2em">Artists</Link>
                 {session?.user && <Link href={"/artist/"+session.address} mr="2em">Personal page</Link>}
             </Flex>
-            
-            {!session && (
-            <>
-                <button
-                    onClick={(e) => {
-                        e.preventDefault()
-                        handleLogin()
-                    }}
-                    >
-                    Sign-In with Ethereum
-                </button>
-            </>
-          )}
-          {session?.user && (
-            <>
-              {session.user.image && (
-                <img src={session.user.image} />
-              )}
-              <span>
-                <small>Signed in as</small>
-                <br />
-                <strong>{session.user.email ?? session.user.name}</strong>
-              </span>
-              <a
-                href={`/api/auth/signout`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  signOut()
-                }}
-              >
-                Sign out
-              </a>
-            </>
-          )}
+
+          
         </Box>
     )
 }

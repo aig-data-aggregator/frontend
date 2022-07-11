@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { queryCollections, queryModerators, queryArtists, queryNews } from "../common/interface"
 import { useSession } from "next-auth/react"
+import { Box, Heading, Button, Input, Text, Flex, Spacer } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from '@chakra-ui/react'
 
 export default function Admin() {
     const [moderators, setModerators] = useState(null)
@@ -232,32 +245,42 @@ export default function Admin() {
     }, [])
 
     return (
-        <div>
-            <div style={{height: '500px'}}></div>
-            <h1>Admin page</h1>
+        <Box pt="5em">
+            <Heading textAlign="center">Admin page</Heading>
             {
                 moderators === null ? (
                     <p>Loading...</p>
                 ) : (
                     session?.user ? (
                         moderators.find(x => x.address == session?.address) ? (
-                            <div>
-                                <p>Current moderators:</p>
-                                {moderators.map(moderator => (
-                                    <form key={moderator.address} onSubmit={(e) => editModerator(e, moderator.address)}>
-                                        <label>Address <input defaultValue={moderator.address} name="address" /></label>
-                                        <button type="submit">Edit</button>
-                                        <button onClick={(e) => deleteModerator(e, moderator.address) }>Delete</button>
+                            <Box p="10">
+                                <Heading size="lg">MODERATORS</Heading>
+                                <Box borderWidth='1px' borderRadius='lg' p="1em">
+                                    {moderators.map(moderator => (
+                                        <form key={moderator.address} onSubmit={(e) => editModerator(e, moderator.address)}>
+                                            <Text>Address</Text>
+                                            <Flex>
+                                                <Input mr="1em" defaultValue={moderator.address} name="address" />
+                                                <Button mr="1em" colorScheme="yellow" type="submit">Edit</Button>
+                                                <Button colorScheme="red" onClick={(e) => deleteModerator(e, moderator.address) }>Delete</Button>
+                                            </Flex>
+                                            <Box my="1em" borderWidth="1px"/>
+                                        </form>
+                                        )
+                                    )}
+                                </Box>
+                                <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                    <form onSubmit={addModerator}>
+                                        <Heading size="md">Add new</Heading>
+                                        <Text>Address</Text>
+                                        <Flex>
+                                            <Input type="text" name="address" />
+                                            <Button colorScheme="green" type="submit" value="add" w="10em" mx="1em">Add</Button>
+                                        </Flex>
                                     </form>
-                                    )
-                                )}
-                                <form onSubmit={addModerator}>
-                                    <p>Add new</p>
-                                    <label>Address: <input type="text" name="address" /></label>
-                                    <input type="submit" value="Add"/>
-                                </form>
-                                <div>
-                                    <h3>All collections:</h3>
+                                </Box>
+                                <Box mt="1em">
+                                    <Heading size="lg">COLLECTIONS</Heading>
                                     {
                                         collections &&
                                         collections.map(collection => (
@@ -279,7 +302,7 @@ export default function Admin() {
                                             </form>
                                         ))
                                     }
-                                </div>
+                                </Box>
                                 <form onSubmit={addCollection}>
                                     <h3>Add new collection</h3>
                                     <label>Address: <input type="text" name="address" /></label>
@@ -349,15 +372,19 @@ export default function Admin() {
                                     <label>Tags: <input type="text" name="tags" /></label>
                                     <input type="submit" value="Add"/>
                                 </form>
-                            </div>
+                            </Box>
                         ) : (
                             <p>You are not authorized</p>
                         )
                     ) : (
-                        <p>Please Login</p>
+                        <Alert status='warning' m="5" w="auto" height="10em" textAlign="center" alignItems="center" justifyContent="center" flexDirection="column">
+                            <AlertIcon boxSize="2em" mb="2"/>
+                            <AlertTitle>Sign-In!</AlertTitle>
+                            <AlertDescription>You&apos;re not authorized to access this page.</AlertDescription>
+                        </Alert>
                     )
                 )
             }
-        </div>
+        </Box>
     )
 }
