@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { queryCollections, queryModerators, queryArtists, queryNews } from "../common/interface"
 import { useSession } from "next-auth/react"
-import { Box, Heading, Button, Input, Text, Flex, Spacer } from "@chakra-ui/react"
+import { Box, Heading, Button, Input, Text, Flex, Spacer, Textarea, Checkbox } from "@chakra-ui/react"
 import {
   Alert,
   AlertIcon,
@@ -13,6 +13,14 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+} from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react'
 
 export default function Admin() {
@@ -195,7 +203,7 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target)
         const news = {
-            date: formData.get("date"),
+            // date: formData.get("date"),
             url: formData.get("url"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
@@ -254,124 +262,202 @@ export default function Admin() {
                     session?.user ? (
                         moderators.find(x => x.address == session?.address) ? (
                             <Box p="10">
-                                <Heading size="lg">MODERATORS</Heading>
-                                <Box borderWidth='1px' borderRadius='lg' p="1em">
-                                    {moderators.map(moderator => (
-                                        <form key={moderator.address} onSubmit={(e) => editModerator(e, moderator.address)}>
-                                            <Text>Address</Text>
-                                            <Flex>
-                                                <Input mr="1em" defaultValue={moderator.address} name="address" />
-                                                <Button mr="1em" colorScheme="yellow" type="submit">Edit</Button>
-                                                <Button colorScheme="red" onClick={(e) => deleteModerator(e, moderator.address) }>Delete</Button>
-                                            </Flex>
-                                            <Box my="1em" borderWidth="1px"/>
-                                        </form>
-                                        )
-                                    )}
-                                </Box>
-                                <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
-                                    <form onSubmit={addModerator}>
-                                        <Heading size="md">Add new</Heading>
-                                        <Text>Address</Text>
-                                        <Flex>
-                                            <Input type="text" name="address" />
-                                            <Button colorScheme="green" type="submit" value="add" w="10em" mx="1em">Add</Button>
-                                        </Flex>
-                                    </form>
-                                </Box>
-                                <Box mt="1em">
-                                    <Heading size="lg">COLLECTIONS</Heading>
-                                    {
-                                        collections &&
-                                        collections.map(collection => (
-                                            <form onSubmit={e => editCollection(e, collection._id)} key={collection.address}>
-                                                <label>Address <input defaultValue={collection.address} name="address" /></label>
-                                                <label>Name <input defaultValue={collection.name} name="name"/></label>
-                                                <label>Description <input defaultValue={collection.description} name="description"/></label>
-                                                <label>Cover Image <input defaultValue={collection.coverImage} name="coverImage"/></label>
-                                                <label>Platform <input defaultValue={collection.platform} name="platform"/></label>
-                                                <label>Multi Contract <input defaultChecked={collection.multiContract} name="multiContract" type="checkbox"/></label>
-                                                <label>Collection Url <input defaultValue={collection.collectionUrl} name="collectionUrl"/></label>
-                                                <label>NFT Url <input defaultValue={collection.nftUrl} name="nftUrl"/></label>
-                                                <label>OpenSea Slug <input defaultValue={collection.openseaSlug} name="openseaSlug"/></label>
-                                                <label>Tags <input defaultValue={collection.tags} name="tags"/></label>
-                                                <button type="reset">Discard Changes</button>
-                                                <button type="submit">Edit</button>
-                                                <button onClick={(e) => deleteCollection(e, collection._id)}>Delete</button>
-                                                <div style={{height:"50px"}}></div>
-                                            </form>
-                                        ))
-                                    }
-                                </Box>
-                                <form onSubmit={addCollection}>
-                                    <h3>Add new collection</h3>
-                                    <label>Address: <input type="text" name="address" /></label>
-                                    <label>Name: <input type="text" name="name" /></label>
-                                    <label>Description: <input type="textarea" name="description"/></label>
-                                    <label>Cover Image: <input type="text" name="coverImage" /></label>
-                                    <label>Platform: <input type="text" name="platform"/></label>
-                                    <label>Multicontract: <input type="checkbox" name="multiContract" /></label>
-                                    <label>Collection URL: <input type="text" name="collectionUrl" /></label>
-                                    <label>NFT URL: <input type="text" name="nftUrl"/></label>
-                                    <label>OpenSea slug: <input type="text" name="openseaSlug"/></label>
-                                    <label>Tags: <input type="text" name="tags" /></label>
-                                    <input type="submit" value="Add"/>
-                                </form>
-                                <div>
-                                    <h3>All artists:</h3>
-                                    {
-                                        artists &&
-                                        artists.map(artist => (
-                                            <form onSubmit={e => editArtist(e, artist.address)} key={artist.address}>
-                                                <label>Address <input defaultValue={artist.address} name="address" /></label>
-                                                <label>Name <input defaultValue={artist.name} name="name"/></label>
-                                                <label>Description <input defaultValue={artist.description} name="description"/></label>
-                                                <label>Cover Image <input defaultValue={artist.coverImage} name="coverImage"/></label>
-                                                <label>OpenSea Slug <input defaultValue={artist.openseaSlug} name="openseaSlug"/></label>
-                                                <label>Tags <input defaultValue={artist.tags} name="tags"/></label>
-                                                <button type="reset">Discard Changes</button>
-                                                <button type="submit">Edit</button>
-                                                <button onClick={(e) => deleteArtist(e, artist.address)}>Delete</button>
-                                                <div style={{height:"50px"}}></div>
-                                            </form>
-                                        ))
-                                    }
-                                </div>
-                                <form onSubmit={addArtist}>
-                                    <h3>Add new artist</h3>
-                                    <label>Address: <input type="text" name="address" /></label>
-                                    <label>Name: <input type="text" name="name" /></label>
-                                    <label>Description: <input type="textarea" name="description"/></label>
-                                    <label>Cover Image: <input type="text" name="coverImage" /></label>
-                                    <label>OpenSea Slug <input name="openseaSlug"/></label>
-                                    <label>Tags <input name="tags"/></label>
-                                    <input type="submit" value="Add"/>
-                                </form>
+                                <Tabs mt="2" variant='soft-rounded' colorScheme="blue" align="center">
+                                    <TabList>
+                                        <Tab>Moderators</Tab>
+                                        <Tab>Collections</Tab>
+                                        <Tab>Artists</Tab>
+                                        <Tab>News</Tab>
+                                    </TabList>
 
-                                <div>
-                                    <h3>All news:</h3>
-                                    {
-                                        news &&
-                                        news.map(newsItem => (
-                                            <form onSubmit={e => editNews(e, newsItem._id)} key={newsItem._id}>
-                                                {/*<label>Date <input defaultValue={newsItem.date} type="date" name="date" /></label>*/}
-                                                <label>URL <input defaultValue={newsItem.url} name="url" /></label>
-                                                <label>Tags <input defaultValue={newsItem.tags} name="tags"/></label>
-                                                <button type="reset">Discard Changes</button>
-                                                <button type="submit">Edit</button>
-                                                <button onClick={(e) => deleteNews(e, newsItem._id)}>Delete</button>
-                                                <div style={{height:"50px"}}></div>
-                                            </form>
-                                        ))
-                                    }
-                                </div>
-                                <form onSubmit={addNews}>
-                                    <h3>Add new News item</h3>
-                                    {/* <label>Date: <input type="date" name="date" /></label> */}
-                                    <label>Url: <input type="text" name="url" /></label>
-                                    <label>Tags: <input type="text" name="tags" /></label>
-                                    <input type="submit" value="Add"/>
-                                </form>
+                                    <TabPanels>
+                                        <TabPanel align="left">
+                                            <Heading size="lg">MODERATORS</Heading>
+                                            <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                                <form onSubmit={addModerator}>
+                                                    <Heading size="md">Add new</Heading>
+                                                    <Text>Address</Text>
+                                                    <Flex>
+                                                        <Input type="text" name="address" placeholder="0x..."/>
+                                                        <Button colorScheme="green" type="submit" value="add" w="10em" mx="1em">Add</Button>
+                                                    </Flex>
+                                                </form>
+                                            </Box>
+                                            <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                                {moderators.map(moderator => (
+                                                    <form key={moderator.address} onSubmit={(e) => editModerator(e, moderator.address)}>
+                                                        <Text>Address</Text>
+                                                        <Flex>
+                                                            <Input mr="1em" defaultValue={moderator.address} name="address" />
+                                                            <Button mr="1em" colorScheme="yellow" type="submit">Edit</Button>
+                                                            <Button colorScheme="red" onClick={(e) => deleteModerator(e, moderator.address) }>Delete</Button>
+                                                        </Flex>
+                                                        <Box my="1em" borderWidth="1px"/>
+                                                    </form>
+                                                    )
+                                                )}
+                                            </Box>
+                                        </TabPanel>
+                                        <TabPanel align="left">
+                                            <Heading size="lg">COLLECTIONS</Heading>
+                                            <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                                <form onSubmit={addCollection}>
+                                                    <Heading size="md">Add new collection</Heading>
+                                                    <Text mt="2">Address</Text>
+                                                    <Input type="text" name="address" placeholder="0x..."/>
+                                                    <Text mt="2">Name</Text>
+                                                    <Input type="text" name="name" />
+                                                    <Text mt="2">Description</Text>
+                                                    <Textarea mt="2" type="textarea" name="description"/>
+                                                    <Text mt="2">Cover Image: <Input type="text" name="coverImage" placeholder="https://..."/></Text>
+                                                    <Text mt="2">Platform: <Input type="text" name="platform"/></Text>
+                                                    <Text mt="2">Multicontract: <Checkbox type="checkbox" name="multiContract" /></Text>
+                                                    <Text mt="2">Collection URL: <Input type="text" name="collectionUrl" /></Text>
+                                                    <Text mt="2">NFT URL: <Input type="text" name="nftUrl"/></Text>
+                                                    <Text mt="2">OpenSea slug: <Input type="text" name="openseaSlug"/></Text>
+                                                    <Text mt="2">Tags: <Input type="text" name="tags" /></Text>
+                                                    <Button mt="2" type="submit" value="Add" colorScheme="green">Add</Button>
+                                                </form>
+                                            </Box>
+                                            <Box p="1em" borderWidth="1px" mt="1em">
+                                                <Heading size="md">Added collections</Heading>
+                                                <Accordion allowMultiple allowToggle borderWidth="1px">
+                                                {
+                                                    collections &&
+                                                    collections.map(collection => (
+                                                        <form onSubmit={e => editCollection(e, collection._id)} key={collection.address}>
+                                                            <AccordionItem>
+                                                                <h2>
+                                                                <AccordionButton>
+                                                                    <Box flex='1' textAlign='left'>
+                                                                        <Text>Name <Input defaultValue={collection.name} name="name"/></Text>
+                                                                    </Box>
+                                                                    <AccordionIcon />
+                                                                </AccordionButton>
+                                                                </h2>
+                                                                <AccordionPanel>
+                                                                    <Text>Address <Input defaultValue={collection.address} name="address" /></Text>
+                                                                    <Text>Description <Input defaultValue={collection.description} name="description"/></Text>
+                                                                    <Text>Cover Image <Input defaultValue={collection.coverImage} name="coverImage"/></Text>
+                                                                    <Text>Platform <Input defaultValue={collection.platform} name="platform"/></Text>
+                                                                    <Text>Multi Contract <Input defaultChecked={collection.multiContract} name="multiContract" type="checkbox"/></Text>
+                                                                    <Text>Collection Url <Input defaultValue={collection.collectionUrl} name="collectionUrl"/></Text>
+                                                                    <Text>NFT Url <Input defaultValue={collection.nftUrl} name="nftUrl"/></Text>
+                                                                    <Text>OpenSea Slug <Input defaultValue={collection.openseaSlug} name="openseaSlug"/></Text>
+                                                                    <Text>Tags <Input defaultValue={collection.tags} name="tags"/></Text>
+                                                                    <Box mt="2">
+                                                                        <Button colorScheme="purple" mr="2" type="reset">Discard Changes</Button>
+                                                                        <Button colorScheme="yellow" mr="2" type="submit">Edit</Button>
+                                                                        <Button colorScheme="red" onClick={(e) => deleteCollection(e, collection._id)}>Delete</Button>
+                                                                    </Box>
+                                                                </AccordionPanel>
+                                                            </AccordionItem>
+                                                        </form>
+                                                    ))
+                                                }
+                                                </Accordion>
+                                            </Box>
+                                        </TabPanel>
+                                        <TabPanel align="left">
+                                            <Box>
+                                                <Heading size="lg">ARTISTS</Heading>
+                                                <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                                    <form onSubmit={addArtist}>
+                                                        <Heading size="md">Add new artist</Heading>
+                                                        <Text>Address: <Input type="text" name="address" /></Text>
+                                                        <Text>Name: <Input type="text" name="name" /></Text>
+                                                        <Text>Description: <Input type="textarea" name="description"/></Text>
+                                                        <Text>Cover Image: <Input type="text" name="coverImage" /></Text>
+                                                        <Text>OpenSea Slug <Input name="openseaSlug"/></Text>
+                                                        <Text>Tags <Input name="tags"/></Text>
+                                                        <Button mt="2" type="submit" value="Add" colorScheme="green">Add</Button>
+                                                    </form>
+                                                </Box>
+                                                <Box p="1em" borderWidth="1px" mt="1em">
+                                                    <Heading size="md">Added artists</Heading>
+                                                    <Accordion allowMultiple allowToggle borderWidth="1px">
+                                                    {
+                                                        artists &&
+                                                        artists.map(artist => (
+                                                            <form onSubmit={e => editArtist(e, artist.address)} key={artist.address}>
+                                                                <AccordionItem>
+                                                                    <h2>
+                                                                    <AccordionButton>
+                                                                        <Box flex='1' textAlign='left'>
+                                                                            <Text>Name <Input defaultValue={artist.name} name="name"/></Text>
+                                                                        </Box>
+                                                                        <AccordionIcon />
+                                                                    </AccordionButton>
+                                                                    </h2>
+                                                                    <AccordionPanel>
+                                                                        <Text>Address <Input defaultValue={artist.address} name="address" /></Text>
+                                                                        <Text>Description <Input defaultValue={artist.description} name="description"/></Text>
+                                                                        <Text>Cover Image <Input defaultValue={artist.coverImage} name="coverImage"/></Text>
+                                                                        <Text>OpenSea Slug <Input defaultValue={artist.openseaSlug} name="openseaSlug"/></Text>
+                                                                        <Text>Tags <Input defaultValue={artist.tags} name="tags"/></Text>
+                                                                        <Box mt="2">
+                                                                            <Button mr="2" colorScheme="purple" type="reset">Discard Changes</Button>
+                                                                            <Button mr="2" colorScheme="yellow" type="submit">Edit</Button>
+                                                                            <Button mr="2" colorScheme="red" onClick={(e) => deleteArtist(e, artist.address)}>Delete</Button>
+                                                                        </Box>
+                                                                    </AccordionPanel>
+                                                                </AccordionItem>
+                                                            </form>
+                                                        ))
+                                                    }
+                                                    </Accordion>
+                                                </Box>
+                                            </Box>
+                                        </TabPanel>
+                                        <TabPanel align="left">
+                                            <Box>
+                                                <Heading size="lg">ARTISTS</Heading>
+                                                <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
+                                                    <form onSubmit={addNews}>
+                                                        <Heading size="md">Add new News item</Heading>
+                                                        {/* <Text>Date <Input type="datetime-local" name="date" /></Text> */}
+                                                        <Text>Url <Input type="text" name="url" /></Text>
+                                                        <Text>Tags <Input type="text" name="tags" /></Text>
+                                                        <Button mt="2" type="submit" value="Add" colorScheme="green">Add</Button>
+                                                    </form>
+                                                </Box>
+                                                <Box p="1em" borderWidth="1px" mt="1em">
+                                                    <Heading size="md">Added events</Heading>
+                                                    <Accordion allowMultiple allowToggle borderWidth="1px">
+                                                {
+                                                    news &&
+                                                    news.map(newsItem => (
+                                                        <form onSubmit={e => editNews(e, newsItem._id)} key={newsItem._id}>
+                                                            <AccordionItem>
+                                                                    <h2>
+                                                                    <AccordionButton>
+                                                                        <Box flex='1' textAlign='left'>
+                                                                            <Text>date un nome alle news pls</Text>
+                                                                        </Box>
+                                                                        <AccordionIcon />
+                                                                    </AccordionButton>
+                                                                    </h2>
+                                                                    <AccordionPanel>
+                                                                        {/* <Text>Date <Input defaultValue={newsItem.date} type="date" name="date" /></Text> */}
+                                                                        <Text>URL <Input defaultValue={newsItem.url} name="url" /></Text>
+                                                                        <Text>Tags <Input defaultValue={newsItem.tags} name="tags"/></Text>
+                                                                        <Box mt="2">
+                                                                            <Button mr="2" colorScheme="purple" type="reset">Discard Changes</Button>
+                                                                            <Button mr="2" colorScheme="yellow" type="submit">Edit</Button>
+                                                                            <Button mr="2" colorScheme="red" onClick={(e) => deleteNews(e, newsItem._id)}>Delete</Button>
+                                                                        </Box>
+                                                                        
+                                                                    </AccordionPanel>
+                                                            </AccordionItem>
+                                                        </form>
+                                                    ))
+                                                }
+                                                    </Accordion>
+                                                </Box>
+                                            </Box>
+                                        </TabPanel>
+                                    </TabPanels>
+                                </Tabs>
                             </Box>
                         ) : (
                             <p>You are not authorized</p>
