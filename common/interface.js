@@ -305,6 +305,16 @@ const queryNews = async () => {
     return news
 }
 
+const isModerator = async (address) => {
+    const moderators = await fetch('/api/moderators').then(res => res.json())
+    return moderators.some(x => x._id === address)
+}
+
+const queryOgFields = async (url) => {
+    const fields = await fetch('/api/ogs/' + encodeURIComponent(url)).then(res => res.json())
+    return fields
+}
+
 export { addressToCollections, addressToArtist, 
             queryCollections, queryNfts, queryNftInfo, 
             getCategories, 
@@ -313,5 +323,5 @@ export { addressToCollections, addressToArtist,
             queryTopCollections,
             queryModerators,
             querySingleArtist,
-            queryNews
+            queryNews, isModerator, queryOgFields
         }

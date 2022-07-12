@@ -214,7 +214,7 @@ export default function Admin() {
         e.preventDefault()
         const formData = new FormData(e.target)
         const collection = {
-            date: formData.get("date"),
+            // date: formData.get("date"),
             url: formData.get("url"),
             tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
@@ -354,7 +354,7 @@ export default function Admin() {
                                         news &&
                                         news.map(newsItem => (
                                             <form onSubmit={e => editNews(e, newsItem._id)} key={newsItem._id}>
-                                                <label>Date <input defaultValue={newsItem.date} type="date" name="date" /></label>
+                                                {/*<label>Date <input defaultValue={newsItem.date} type="date" name="date" /></label>*/}
                                                 <label>URL <input defaultValue={newsItem.url} name="url" /></label>
                                                 <label>Tags <input defaultValue={newsItem.tags} name="tags"/></label>
                                                 <button type="reset">Discard Changes</button>
@@ -367,7 +367,7 @@ export default function Admin() {
                                 </div>
                                 <form onSubmit={addNews}>
                                     <h3>Add new News item</h3>
-                                    <label>Date: <input type="date" name="date" /></label>
+                                    {/* <label>Date: <input type="date" name="date" /></label> */}
                                     <label>Url: <input type="text" name="url" /></label>
                                     <label>Tags: <input type="text" name="tags" /></label>
                                     <input type="submit" value="Add"/>

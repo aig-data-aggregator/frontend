@@ -9,6 +9,8 @@ import { SiweMessage } from 'siwe'
 import { useConnect, useSignMessage } from 'wagmi'
 import truncateEthAddress from 'truncate-eth-address'
 
+import { isModerator } from '../common/interface'
+
 export default function Header() {
     const router = useRouter()
     const [readProvider, _] = useReadProvider()
@@ -100,6 +102,7 @@ export default function Header() {
                             </Button>
                         </Flex>
                     )}
+                    
                 </Box>
             </Flex>
             <Flex align="center" ml="2em">
@@ -107,7 +110,13 @@ export default function Header() {
                 <Link href="/topCollections" mr="2em">Top 100 Collections</Link>
                 <Link href="/artworks" mr="2em">Artworks</Link>
                 <Link href="/artists" mr="2em">Artists</Link>
+                <Link href="/news" mr="2em">News</Link>
                 {session?.user && <Link href={"/artist/"+session.address} mr="2em">Personal page</Link>}
+                {
+                        session?.user && isModerator(session.address) && (
+                            <Link href={"/admin"} mr="2em">Admin</Link>
+                        )
+                        }
             </Flex>
 
           
