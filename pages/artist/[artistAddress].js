@@ -4,7 +4,7 @@ import NftCard from '../../components/NftCard';
 import {Button, Box} from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex} from '@chakra-ui/react'
 
-import { nftsOwnedByAddress, nftsMintedByAddress } from '../../common/interface'
+import { nftsOwnedByAddress, nftsMintedByAddress, querySingleArtist } from '../../common/interface'
 import { useSession } from "next-auth/react";
 
 export default function ArtistPage(){
@@ -20,6 +20,7 @@ export default function ArtistPage(){
     const [allMinted, setAllMinted] = useState([])
     const [pageIndexMinted, setPageIndexMinted] = useState(0)
     const [loadingMinted, setLoadingMinted] = useState(false)
+    const [artistInfo, setArtistInfo] = useState(null)
 
     const { data: session, status } = useSession()
     
@@ -113,6 +114,7 @@ export default function ArtistPage(){
         if (artistAddress) {
             fetchNfts()
         }
+        querySingleArtist(artistAddress).then(newInfo => setArtistInfo(newInfo))
     }, [artistAddress])
 
     return (
@@ -120,6 +122,7 @@ export default function ArtistPage(){
             <div style={{height:"200px"}}></div>
             <Tabs variant="soft-rounded" align="center" p="2">
                 { session?.user && session?.address === artistAddress && <a href={`/artist/${artistAddress}/edit`}>Edit</a>}
+                <p>{JSON.stringify(artistInfo)}</p>
                 <TabList>
                     <Tab>Minted</Tab>
                     <Tab>Collected</Tab>
