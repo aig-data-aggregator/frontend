@@ -19,7 +19,7 @@ export default function Home() {
 
   const fetchCategories = () => {
     const newCategories = getCategories();
-    setCategoriesChecked(newCategories)
+    setCategoriesChecked([...newCategories, "Others"])
     setCategories(newCategories);
   }
 
@@ -35,8 +35,13 @@ export default function Home() {
 
   function toBeDisplayed(collection) {
     let tags = collection.tags;
+
+    if (tags.length == 0 && categoriesChecked.includes("Others")) {
+      return true
+    }
+
     for(let tag of tags){
-      if(categoriesChecked.includes(tag)){
+      if(categoriesChecked.includes(tag) || (!categories.includes(tag) && categoriesChecked.includes("Others"))) {
         return true;
       }
     }
@@ -56,6 +61,7 @@ export default function Home() {
       </Head>
       <Flex pt="6em" ml="1em" justify="center">
         {categories.map(category => <Checkbox mr="2em" value={category} key={category} defaultChecked={categoriesChecked.includes(category)} onChange={handleCategoryChange}>{category}</Checkbox>)}
+        <Checkbox mr="2em" value="Others" key="Others" defaultChecked={true} onChange={handleCategoryChange}>Others</Checkbox>
       </Flex>
         <Flex m="1em" wrap="wrap" justify="space-around" align="center">
        {
