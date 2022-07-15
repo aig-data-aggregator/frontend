@@ -104,7 +104,7 @@ export default function Admin() {
             collectionUrl: formData.get("collectionUrl"),
             nftUrl: formData.get("nftUrl"),
             openseaSlug: formData.get("openseaSlug"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/collections/', {
             method: 'POST',
@@ -133,7 +133,7 @@ export default function Admin() {
             name: formData.get("name"),
             description: formData.get("description"),
             coverImage: formData.get("coverImage"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/artists/', {
             method: 'POST',
@@ -159,7 +159,7 @@ export default function Admin() {
             collectionUrl: formData.get("collectionUrl"),
             nftUrl: formData.get("nftUrl"),
             openseaSlug: formData.get("openseaSlug"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/collections/' + address, {
             method: 'PUT',
@@ -179,7 +179,7 @@ export default function Admin() {
             name: formData.get("name"),
             description: formData.get("description"),
             coverImage: formData.get("coverImage"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/artists/' + address, {
             method: 'PUT',
@@ -205,7 +205,7 @@ export default function Admin() {
         const news = {
             // date: formData.get("date"),
             url: formData.get("url"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/news/', {
             method: 'POST',
@@ -224,7 +224,7 @@ export default function Admin() {
         const collection = {
             // date: formData.get("date"),
             url: formData.get("url"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/news/' + _id, {
             method: 'PUT',
