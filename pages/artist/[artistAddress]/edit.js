@@ -23,7 +23,7 @@ export default function EditArtistPage(){
             name: formData.get("name"),
             description: formData.get("description"),
             coverImage: formData.get("coverImage"),
-            tags: formData.get("tags").split(',').map(tag => tag.trim())
+            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
         }
         await fetch('/api/artists/' + artistAddress, {
             method: 'PUT',
