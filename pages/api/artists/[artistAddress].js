@@ -11,13 +11,13 @@ const artistSchema = Joi.object({
 async function postArtist(req, res, session, artistCollection) {
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
+    if(session?.address.toLowerCase() !== req.query.artistAddress.toLowerCase() && !moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else{
         try {
             const response = await artistCollection.findOneAndUpdate({
-                _id: session.address
+                _id: session.address.toLowerCase()
             },
             {$set: req.body},
             { upsert: true })
@@ -31,7 +31,7 @@ async function postArtist(req, res, session, artistCollection) {
 }
 
 async function getArtist(req, res, artistCollection){
-    const response = await artistCollection.findOne({_id: req.query.artistAddress})
+    const response = await artistCollection.findOne({_id: req.query.artistAddress.toLowerCase()})
     res.status(200).json(response)
 }
 
@@ -39,26 +39,26 @@ async function modifyArtist(req, res, session, artistCollection){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
     console.log(req.query)
-    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
+    if(session?.address.toLowerCase() !== req.query.artistAddress.toLowerCase() && !moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else {
+        console.log('Updating!')
         try {
-            console.log(req.body, req.query.artistAddress)
-            if(req.body.address !== req.query.artistAddress){
+            if(req.body.address.toLowerCase() !== req.query.artistAddress.toLowerCase()){
                 // address changed
-                let oldArtist = await artistCollection.findOne({_id: req.query.artistAddress})
-                oldArtist._id = req.body.address
+                let oldArtist = await artistCollection.findOne({_id: req.query.artistAddress.toLowerCase()})
+                oldArtist._id = req.body.address.toLowerCase()
                 await artistCollection.insertOne(oldArtist)
-                const response = await artistCollection.deleteOne({_id: req.query.artistAddress})
+                const response = await artistCollection.deleteOne({_id: req.query.artistAddress.toLowerCase()})
                 res.status(200).json(response)
             }
             else {
                 const response = await artistCollection.findOneAndUpdate(
-                    {_id: req.query.artistAddress},
+                    {_id: req.query.artistAddress.toLowerCase()},
                     {
                         $set: req.body
-                    }
+                    }, {upsert: true}
                 )
                 res.status(200).json(response)
             }
@@ -73,14 +73,13 @@ async function modifyArtist(req, res, session, artistCollection){
 async function deleteArtist(req, res, session, artistCollection){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if(!moderators.find(moderator => moderator._id === session.address)){
+    if(!moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else {
         try {
-            console.log(req.query.artistAddress)
             const response = await artistCollection.findOneAndDelete(
-                {_id: req.query.artistAddress}
+                {_id: req.query.artistAddress.toLowerCase()}
             )
             res.status(200).json(response)
         } catch (e) {

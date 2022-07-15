@@ -4,23 +4,23 @@ import clientPromise from "../../../common/mongodb"
 async function modifyCollection(req, res, collectionsCollection, session){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
+    if(session?.address.toLowerCase() !== req.query.artistAddress.toLowerCase() && !moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else {
         try {
-            if(req.body.address !== req.query.collectionAddress){
-                let oldCollection = await collectionsCollection.findOne({_id: req.query.collectionAddress})
-                oldCollection._id = req.body.address
-                await collectionsCollection.deleteOne({_id: req.query.collectionAddress})
+            if(req.body.address.toLowerCase() !== req.query.collectionAddress.toLowerCase()){
+                let oldCollection = await collectionsCollection.findOne({_id: req.query.collectionAddress.toLowerCase()})
+                oldCollection._id = req.body.address.toLowerCase()
+                await collectionsCollection.deleteOne({_id: req.query.collectionAddress.toLowerCase()})
                 const response = await collectionsCollection.insertOne(oldCollection)
                 res.status(200).json(response)
             }
             else{
                 const actualBody = {...req.body}
-                delete actualBody.address
+                delete actualBody.address.toLowerCase()
                 const response = await collectionsCollection.findOneAndUpdate(
-                    {_id: req.body.address},
+                    {_id: req.body.address.toLowerCase()},
                     {
                         $set: actualBody
                     }
@@ -38,13 +38,13 @@ async function modifyCollection(req, res, collectionsCollection, session){
 async function deleteCollection(req, res, collectionsCollection, session){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if(!moderators.find(moderator => moderator._id === session.address)){
+    if(!moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else {
         try {
             const response = await collectionsCollection.findOneAndDelete(
-                {_id: req.query.collectionAddress}
+                {_id: req.query.collectionAddress.toLowerCase()}
             )
             res.status(200).json(response)
         } catch (e) {

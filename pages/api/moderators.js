@@ -10,12 +10,12 @@ const artistSchema = Joi.object({
 
 async function postModerator(req, res, session, moderatorCollection) {
     const moderators = await moderatorCollection.find({}).toArray()
-    if(moderators.some(e => e._id === session.address)){
+    if(moderators.some(e => e._id.toLowerCase() === session.address.toLowerCase())){
         try {
             const response = await moderatorCollection.update(
-                {_id: req.body._id},
+                {_id: req.body._id.toLowerCase()},
                 {
-                    $setOnInsert: {_id: req.body._id}
+                    $setOnInsert: {_id: req.body._id.toLowerCase()}
                 },
                 {upsert: true}
             )

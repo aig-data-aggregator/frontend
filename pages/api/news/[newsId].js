@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb'
 async function editNews(req, res, session, newsCollection){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if (!moderators.find(moderator => moderator._id === session.address)) {
+    if (!moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())) {
         res.status(401).json({error:"Unauthorized"})
     }
     else {

@@ -4,13 +4,13 @@ import clientPromise from "../../common/mongodb"
 async function postCollection(req, res, session, collectionsCollection) {
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
-    if(session?.address !== req.query.artistAddress && !moderators.find(moderator => moderator._id === session.address)){
+    if(session?.address.toLowerCase() !== req.query.artistAddress.toLowerCase() && !moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())){
         res.status(401).json({error:"Unauthorized"})
     }
     else {
         try {
             const response = await collectionsCollection.update(
-                {_id: req.body._id},
+                {_id: req.body._id.toLowerCase()},
                 {
                     $setOnInsert: req.body
                 },

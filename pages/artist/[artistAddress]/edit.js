@@ -15,16 +15,18 @@ export default function EditArtistPage(){
         queryModerators().then(newModerators => setModerators(newModerators))
     }, [])
 
-    function handleSubmit(e){
+    async function handleSubmit(e){
         e.preventDefault()
         const formData = new FormData(e.target)
         const artist = {
+            address: artistAddress,
             name: formData.get("name"),
-            email: formData.get("email"),
-            twitter: formData.get("twitter")
+            description: formData.get("description"),
+            coverImage: formData.get("coverImage"),
+            tags: formData.get("tags").split(',').map(tag => tag.trim())
         }
-        fetch('/api/artists/' + artistAddress, {
-            method: 'POST',
+        await fetch('/api/artists/' + artistAddress, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -47,12 +49,20 @@ export default function EditArtistPage(){
                                 <input type="text" name="name"/>
                             </label>
                             <label>
-                                Email
-                                <input type="email" name="email"/>
+                                Cover image
+                                <input type="text" name="coverImage"/>
                             </label>
                             <label>
-                                Twitter Account
-                                <input type="text" name="twitter"/>
+                                Description
+                                <input type="text" name="description"/>
+                            </label>
+                            <label>
+                                OpenSea slug
+                                <input type="text" name="openseaSlug"/>
+                            </label>
+                            <label>
+                                Tags
+                                <input type="text" name="tags"/>
                             </label>
                             <input type="submit" value="Submit" />
                         </form>
