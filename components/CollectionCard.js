@@ -3,9 +3,11 @@ import Link from "next/link"
 import { Box, Image, Badge, Text } from "@chakra-ui/react"
 import {addressToCollections} from "../common/interface"
 import { useRouter } from "next/router";
+import { useCurrencyConverter } from "../common/currency";
 
 export default function CollectionCard({name, coverUrl, description, address}) {
     const [collection, setCollection] = useState()
+    const convert = useCurrencyConverter()
 
     const queryCollection = async () => {
         const singleCollectionInfo = await addressToCollections(address)
@@ -57,7 +59,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
                     <Text as="i">{description}</Text>
                 </Box>
                 <Box fontWeight="bold">
-                    {"Floor Price: " + ((collection?.stats?.floorPrice+" ETH") || "NA")}
+                    Floor Price: {convert(collection?.stats?.floorPrice, 'ETH') || "NA"}
                 </Box>
             </Box>
         </Box>

@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import {queryTopCollections} from '../common/interface';
 import { Flex, Box, Image, Text, Badge } from '@chakra-ui/react';
 import CollectionCard from '../components/CollectionCard';
+import { useCurrencyConverter } from '../common/currency';
 
 export default function TopCollections() {
     const [collections, setCollections] = useState([]);
     const [period, setPeriod] = useState('day');
+    const convert = useCurrencyConverter()
 
     async function changePeriod(newPeriod) {
         setPeriod(newPeriod);
@@ -66,7 +68,7 @@ export default function TopCollections() {
                                     noOfLines={2}
 
                                     >
-                                    <Text as="i">Value: {collection.value} {collection.baseCurrency} </Text>
+                                    <Text as="i">Value: {convert(collection.value, collection.baseCurrency)} </Text>
                                 </Box>
                             </Box>
                         )

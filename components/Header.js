@@ -11,6 +11,9 @@ import truncateEthAddress from 'truncate-eth-address'
 
 import { isModerator } from '../common/interface'
 
+import { useRecoilState } from "recoil";
+import { targetCurrencyState, CURRENCIES } from "../common/currency";
+
 export default function Header() {
     const router = useRouter()
     const [readProvider, _] = useReadProvider()
@@ -23,6 +26,8 @@ export default function Header() {
 
     const { connectors, connectAsync} = useConnect()
     const { signMessageAsync } = useSignMessage()
+
+    const [targetCurrency, settargetCurrency] = useRecoilState(targetCurrencyState)
 
     const loading = status === "loading"
     const search = async (address) => {
@@ -159,6 +164,13 @@ export default function Header() {
                         <Link href={"/admin"} mr="2em">Admin</Link>
                     )
                 }
+                <select value={targetCurrency} onChange={e => settargetCurrency(e.target.value)}>
+                    {
+                        CURRENCIES.map(currency => (
+                            <option value={currency}>{currency}</option>
+                        ))
+                    }
+                </select>
             </Flex>
             {JSON.stringify(suggestions)}
             {

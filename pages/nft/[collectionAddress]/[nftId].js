@@ -4,10 +4,14 @@ import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
 import { addressToCollections, queryNftInfo } from '../../../common/interface.js'
 import { Box, Heading, Flex, Image, Text, Link } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { useRecoilState } from "recoil";
+import { targetCurrencyState, useCurrencyConverter } from "../../../common/currency.js";
 
 export default function NftPage () {
     const router = useRouter()
     const { collectionAddress, nftId } = router.query
+    const [targetCurrency, setTargetCurrency] = useRecoilState(targetCurrencyState)
+    const convert = useCurrencyConverter()
     const [nftInfo, setNftInfo] = useState({
         name: "",
         description: "",
@@ -56,7 +60,10 @@ export default function NftPage () {
                                     <Text>{sale.seller}</Text>
                                     <Text>BUYER</Text>
                                     <Text>{sale.buyer}</Text>
-                                    <Text>Price: {sale.nativePrice.amount} {sale.nativePrice.currency} ({Math.floor(sale.usdPrice * 100) / 100} USD)</Text>
+                                    <Text>
+                                        Price: {sale.nativePrice.amount} {sale.nativePrice.currency}
+                                        {sale.nativePrice.currency == targetCurrency ? '' : ' (' + convert(sale.usdPrice, 'USD') + ')'}
+                                    </Text>
                                     <Text>{sale.timestamp}</Text>
                                     <Link href={`https://etherscan.io/tx/${sale.hash}`} target="_blank" rel="noopener noreferrer"><ExternalLinkIcon/>View on Etherscan</Link>
                                     <hr/>

@@ -91,7 +91,11 @@ const useEns = () => {
     }
 
     const getAvatarAsync = async (address) => {
-        return await ensProvider.getAvatar(address)
+        try {
+            return await ensProvider.getAvatar(address)
+        } catch {
+            return null
+        }
     }
 
     const getTextAsync = async (address, field) => {

@@ -12,6 +12,7 @@ import {
   StatArrow,
   StatGroup,
 } from '@chakra-ui/react'
+import { useCurrencyConverter } from "../../common/currency";
 
 export default function CollectionsPage () {
     const [pageIndex, setPageIndex] = useState(0)
@@ -23,6 +24,8 @@ export default function CollectionsPage () {
         name: "",
         description: ""
     })
+    const convert = useCurrencyConverter()
+
     const router = useRouter()
     const { collectionAddress } = router.query
 
@@ -89,7 +92,7 @@ export default function CollectionsPage () {
 
                     <Stat>
                         <StatLabel>Floor</StatLabel>
-                        <StatNumber>{collection.stats?.floorPrice ? <p>{collection.stats.floorPrice} ETH</p> : <></>}</StatNumber>
+                        <StatNumber>{collection.stats?.floorPrice ? <p>{convert(collection.stats.floorPrice, 'ETH')}</p> : <></>}</StatNumber>
                         {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
@@ -107,7 +110,7 @@ export default function CollectionsPage () {
 
                     <Stat>
                         <StatLabel>Daily Sales</StatLabel>
-                        <StatNumber>{collection.stats ? (collection.stats.day.sales ? <p>{collection.stats.day.sales} ETH</p> : <></>) : <></> }</StatNumber>
+                        <StatNumber>{collection.stats ? (collection.stats.day.sales ? <p>{collection.stats.day.sales}</p> : <></>) : <></> }</StatNumber>
                         {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
@@ -116,7 +119,7 @@ export default function CollectionsPage () {
 
                     <Stat>
                         <StatLabel>Daily Volume</StatLabel>
-                        <StatNumber>{collection.stats ? (collection.stats.day.volume ? <p>{Math.round(collection.stats.day.volume * 100) / 100} ETH</p> : <></>) : <></> }</StatNumber>
+                        <StatNumber>{collection.stats ? (collection.stats.day.volume ? <p>{convert(collection.stats.day.volume, 'ETH')}</p> : <></>) : <></> }</StatNumber>
                         {/*<StatHelpText>
                         <StatArrow type='increase' />
                         69.420%
