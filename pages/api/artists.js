@@ -25,9 +25,19 @@ async function postArtist(req, res, session, artistCollection) {
     }
 }
 
-async function getArtist(req, res, artistCollection){
+async function getArtists(req, res, artistCollection){
     try {
-        const response = await artistCollection.find({}).toArray()
+        let response;
+        if (req.query.search) {
+            const search = decodeURIComponent(req.query.search)
+            response = await artistCollection.find(
+                { $text: { $search: search } },
+                { score: { $meta: "textScore" } }
+             ).sort( { score: { $meta: "textScore" } } ).toArray()
+        } else {
+            response = await artistCollection.find({}).toArray()
+        }
+
         res.status(200).json(response)
     } catch (e) {
         console.log('ERROR')
@@ -45,7 +55,7 @@ export default async (req, res) => {
             await postArtist(req, res, session, artistCollection)
         break;
         case 'GET':
-            await getArtist(req, res, artistCollection)
+            await getArtists(req, res, artistCollection)
         break;
         default:
             res.status(405).send({ message: 'Method not allowed' })

@@ -17,31 +17,68 @@ export default function Header() {
     const { resolveAsync } = useEns()
     const [query, setQuery] = useState('')
     const { data: session, status } = useSession()
+    const [searchType, setSearchType] = useState('all')
+    const [autoCompleteController, setAutoCompleteController] = useState(null)
+    const [suggestions, setSuggestions] = useState(null)
 
     const { connectors, connectAsync} = useConnect()
     const { signMessageAsync } = useSignMessage()
 
     const loading = status === "loading"
-    const search = async (e) => {
-        e.preventDefault()
-        let actualQuery;
+    const search = async (address) => {
+        let actualAddress;
         let code;
         try {
             if (query.endsWith('.eth')) {
-                actualQuery = await resolveAsync(query)
+                actualAddress = await resolveAsync(address)
             } else {
-                actualQuery = query;
+                actualAddress = address;
             }
 
-            code = await readProvider.getCode(actualQuery)
+            code = await readProvider.getCode(actualAddress)
         } catch {
             return;
         }
         if (code == '0x') {
-            router.push('/artist/' + actualQuery)
+            router.push('/artist/' + actualAddress)
         } else {
-            router.push('/collection/' + actualQuery)
+            router.push('/collection/' + actualAddress)
         }
+    }
+
+    const autoComplete = (query) => {
+        if (!query) {
+            return
+        }
+        if (autoCompleteController) {
+            autoCompleteController.abort()
+        }
+        let controller = new AbortController()
+        const promises = []
+        if (['artist', 'all'].includes(searchType)) {
+            promises.push(fetch('/api/artists?search=' + encodeURI(query), {
+                signal: controller.signal
+            }))
+        }
+
+        if (['collection', 'all'].includes(searchType)) {
+            promises.push(fetch('/api/collections?search=' + encodeURI(query), {
+                signal: controller.signal
+            }))
+        }
+
+        Promise.all(promises)
+            .then(resArray => Promise.all(resArray.map(res => res.json())))
+            .then(resArray => {
+                const allResults = []
+                for (const res of resArray) {
+                    console.log(res)
+                    allResults.push(...res)
+                }
+                console.log(allResults)
+                setSuggestions(allResults)
+            })
+        setAutoCompleteController(controller)
     }
 
     const handleLogin = async () => {
@@ -68,8 +105,13 @@ export default function Header() {
                 <Link href="/">
                     <Heading>AIG</Heading>
                 </Link>
-                <form onSubmit={search}>
-                    <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Insert address or ENS" mx="2em" width="xl" />
+                <select value={searchType} onChange={e => setSearchType(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value="artist">Artists</option>
+                    <option value="collection">Collections</option>
+                </select>
+                <form onSubmit={(e) => {e.preventDefault(); search(query)}}>
+                    <Input value={query} onChange={(e) => {setQuery(e.target.value); autoComplete(e.target.value)}} placeholder="Insert address or ENS" mx="2em" width="xl" />
                 </form>
                 <Box>
                     {!session && (
@@ -113,13 +155,17 @@ export default function Header() {
                 <Link href="/news" mr="2em">News</Link>
                 {session?.user && <Link href={"/artist/"+session.address} mr="2em">Personal page</Link>}
                 {
-                        session?.user && isModerator(session.address) && (
-                            <Link href={"/admin"} mr="2em">Admin</Link>
-                        )
-                        }
+                    session?.user && isModerator(session.address) && (
+                        <Link href={"/admin"} mr="2em">Admin</Link>
+                    )
+                }
             </Flex>
-
-          
+            {JSON.stringify(suggestions)}
+            {
+                suggestions && suggestions.map(suggestion => (
+                    <label>{suggestion.name}<button onClick={() => search(suggestion.address)}>Go</button></label>
+                ))
+            }
         </Box>
     )
 }

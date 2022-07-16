@@ -27,7 +27,16 @@ async function postCollection(req, res, session, collectionsCollection) {
 
 async function getCollections(req, res, collectionsCollection){
     try {
-        const response = await collectionsCollection.find({}).toArray()
+        let response;
+        if (req.query.search) {
+            const search = decodeURIComponent(req.query.search)
+            response = await collectionsCollection.find(
+                { $text: { $search: search } },
+                { score: { $meta: "textScore" } }
+             ).sort( { score: { $meta: "textScore" } } ).toArray()
+        } else {
+            response = await collectionsCollection.find({}).toArray()
+        }
         res.status(200).json(response)
     } catch (e) {
         console.log('ERROR')
