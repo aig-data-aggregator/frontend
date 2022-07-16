@@ -305,6 +305,11 @@ const queryNews = async () => {
     return news
 }
 
+const queryEvents = async () => {
+    const events = await fetch('/api/events').then(res => res.json())
+    return events
+}
+
 const isModerator = async (address) => {
     const moderators = await fetch('/api/moderators').then(res => res.json())
     return moderators.some(x => x._id === address)
@@ -323,5 +328,6 @@ export { addressToCollections, addressToArtist,
             queryTopCollections,
             queryModerators,
             querySingleArtist,
-            queryNews, isModerator, queryOgFields
+            queryNews, queryEvents,
+            isModerator, queryOgFields
         }
