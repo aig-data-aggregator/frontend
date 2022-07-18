@@ -22,6 +22,8 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
+import Map from "../components/Map"
+import PlacePicker from "../components/PlacePicker"
 
 export default function Admin() {
     const [moderators, setModerators] = useState(null)
@@ -532,9 +534,7 @@ export default function Admin() {
                                                         <Heading size="md">Add new event</Heading>
                                                         <Text>Name <Input type="text" name="name" /></Text>
                                                         <Text>Description <Textarea type="text" name="description" /></Text>
-                                                        <Text>Place <Input type="text" name="place" /></Text>
-                                                        <Text>Latitude <Input type="text" name="latitude" /></Text>
-                                                        <Text>Longitude <Input type="text" name="longitude" /></Text>
+                                                        <PlacePicker />
                                                         <Text>From <Input type="datetime-local" name="from" /></Text>
                                                         <Text>To <Input type="datetime-local" name="to" /></Text>
                                                         <Text>Display hour: <Checkbox type="checkbox" name="displayHour" /></Text>
