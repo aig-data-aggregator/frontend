@@ -24,13 +24,13 @@ import {
 } from '@chakra-ui/react'
 import Map from "../components/Map"
 import PlacePicker from "../components/PlacePicker"
+import EventsTab from "../components/EventsTab"
 
 export default function Admin() {
     const [moderators, setModerators] = useState(null)
     const [collections, setCollections] = useState(null)
     const [artists, setArtists] = useState(null)
     const [news, setNews] = useState(null)
-    const [events, setEvents] = useState(null)
     const {data: session} = useSession()
 
     async function fetchModerators() {
@@ -51,11 +51,6 @@ export default function Admin() {
     async function fetchNews() {
         const newNews = await queryNews()
         setNews(newNews)
-    }
-
-    async function fetchEvents() {
-        const newEvents = await queryEvents()
-        setEvents(newEvents)
     }
 
     async function addModerator(e) {
@@ -253,72 +248,11 @@ export default function Admin() {
         await fetchNews()
     }
 
-    async function addEvent(e) {
-        e.preventDefault()
-        const formData = new FormData(e.target)
-        const event = {
-            name: formData.get("name"),
-            description: formData.get("description"),
-            place: formData.get("place"),
-            coordinates: [formData.get("latitude"), formData.get("longitude")],
-            from: formData.get("from"),
-            to: formData.get("to"),
-            displayHour: formData.get("displayHour"),
-            url: formData.get("url"),
-            artists: formData.get("artists").split(',').map(artist => artist.trim()).filter(artist => artist != ""),
-            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
-        }
-        await fetch('/api/events/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(event)
-        })
-        await fetchEvents()
-        e.target.reset()
-    }
-
-    async function editEvent(e, _id) {
-        e.preventDefault()
-        const formData = new FormData(e.target)
-        const event = {
-            name: formData.get("name"),
-            description: formData.get("description"),
-            place: formData.get("place"),
-            coordinates: [formData.get("latitude"), formData.get("longitude")],
-            from: formData.get("from"),
-            to: formData.get("to"),
-            displayHour: formData.get("displayHour"),
-            url: formData.get("url"),
-            artists: formData.get("artists").split(',').map(artist => artist.trim()).filter(artist => artist != ""),
-            tags: formData.get("tags").split(',').map(tag => tag.trim()).filter(tag => tag != "")
-        }
-        await fetch('/api/events/' + _id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(event)
-        })
-        await fetchEvents()
-        e.target.reset()
-    }
-
-    async function deleteEvent(e, _id) {
-        e.preventDefault()
-        await fetch('/api/events/' + _id, {
-            method: 'DELETE'
-        })
-        await fetchEvents()
-    }
-
     useEffect(() => {
         fetchModerators()
         fetchCollections()
         fetchArtists()
         fetchNews()
-        fetchEvents()
     }, [])
 
     return (
@@ -527,65 +461,7 @@ export default function Admin() {
                                             </Box>
                                         </TabPanel>
                                         <TabPanel align="left">
-                                            <Box>
-                                                <Heading size="lg">EVENTS</Heading>
-                                                <Box borderWidth='1px' borderRadius='lg' p="1em" mt="1em">
-                                                    <form onSubmit={addEvent}>
-                                                        <Heading size="md">Add new event</Heading>
-                                                        <Text>Name <Input type="text" name="name" /></Text>
-                                                        <Text>Description <Textarea type="text" name="description" /></Text>
-                                                        <PlacePicker />
-                                                        <Text>From <Input type="datetime-local" name="from" /></Text>
-                                                        <Text>To <Input type="datetime-local" name="to" /></Text>
-                                                        <Text>Display hour: <Checkbox type="checkbox" name="displayHour" /></Text>
-                                                        <Text>Url <Input type="text" name="url" /></Text>
-                                                        <Text>Artists <Input type="text" name="artists" /></Text>
-                                                        <Text>Tags <Input type="text" name="tags" /></Text>
-                                                        <Button mt="2" type="submit" value="Add" colorScheme="green">Add</Button>
-                                                    </form>
-                                                </Box>
-                                                <Box p="1em" borderWidth="1px" mt="1em">
-                                                    <Heading size="md">Added events</Heading>
-                                                    <Accordion allowMultiple allowToggle borderWidth="1px">
-                                                {
-                                                    events &&
-                                                    events.map(event => (
-                                                        <form onSubmit={e => editEvent(e, event._id)} key={event._id}>
-                                                            <AccordionItem>
-                                                                    <h2>
-                                                                    <AccordionButton>
-                                                                        <Box flex='1' textAlign='left'>
-                                                                            <Text>{event.name}</Text>
-                                                                        </Box>
-                                                                        <AccordionIcon />
-                                                                    </AccordionButton>
-                                                                    </h2>
-                                                                    <AccordionPanel>
-                                                                        <Text>Name <Input type="text" name="name" defaultValue={event.name} /></Text>
-                                                                        <Text>Description <Textarea type="text" name="description" defaultValue={event.description} /></Text>
-                                                                        <Text>Place <Input type="text" name="place" defaultValue={event.place} /></Text>
-                                                                        <Text>Latitude <Input type="text" name="latitude" defaultValue={event.latitude} /></Text>
-                                                                        <Text>Longitude <Input type="text" name="longitude" defaultValue={event.longitude} /></Text>
-                                                                        <Text>From <Input type="datetime-local" name="from" defaultValue={event.from} /></Text>
-                                                                        <Text>To <Input type="datetime-local" name="to" defaultValue={event.to} /></Text>
-                                                                        <Text>Display hour: <Checkbox type="checkbox" name="displayHour" defaultChecked={event.displayHour} /></Text>
-                                                                        <Text>Url <Input type="text" name="url" defaultValue={event.url} /></Text>
-                                                                        <Text>Artists <Input type="text" name="artists" defaultValue={event.artists} /></Text>
-                                                                        <Text>Tags <Input type="text" name="tags" defaultValue={event.tags} /></Text>
-                                                                        <Box mt="2">
-                                                                            <Button mr="2" colorScheme="purple" type="reset">Discard Changes</Button>
-                                                                            <Button mr="2" colorScheme="yellow" type="submit">Edit</Button>
-                                                                            <Button mr="2" colorScheme="red" onClick={(e) => deleteEvent(e, event._id)}>Delete</Button>
-                                                                        </Box>
-                                                                        
-                                                                    </AccordionPanel>
-                                                            </AccordionItem>
-                                                        </form>
-                                                    ))
-                                                }
-                                                    </Accordion>
-                                                </Box>
-                                            </Box>
+                                            <EventsTab />
                                         </TabPanel>
                                     </TabPanels>
                                 </Tabs>

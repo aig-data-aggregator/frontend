@@ -15,6 +15,7 @@ export default function PlacePicker({defaultPlace, defaultLatitude, defaultLongi
     }
 
     const choosePlace = (name, latitude, longitude) => {
+        setPlace(name)
         setLatitude(latitude)
         setLongitude(longitude)
     }
@@ -25,17 +26,19 @@ export default function PlacePicker({defaultPlace, defaultLatitude, defaultLongi
 
     return (
         <div>
-            <Text>Place <Input type="text" value={place} onChange={e => setPlace(e.target.value)} /></Text>
+            <Text>Place <Input type="text" value={place} onChange={e => setPlace(e.target.value)} onReset={e => setPlace(null)} /></Text>
             <Button onClick={searchPlace}>Search</Button>
             {
                 searchResults && searchResults.map(res => (
                     <div key={[res.latitude, res.longitude]}>
                         <p>{res.name}</p>
-                        <button onClick={() => choosePlace(res.name, res.latitude, res.longitude)}>Choose</button>
+                        <button onClick={(e) => {e.preventDefault(); choosePlace(res.name, res.latitude, res.longitude)}}>Choose</button>
                     </div>
                 ))
             }
             <Map latitude={latitude} longitude={longitude} ref={map} />
+            <Input type="text" readonly name="latitude" value={latitude} onReset={e => setLatitude(null)} />
+            <Input type="text" readonly name="longitude" value={longitude} onReset={e => setLongitude(null)} />
         </div>
     )
 }
