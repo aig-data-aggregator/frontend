@@ -8,6 +8,7 @@ export default function EventForm({ dataSource }) {
         <>
             <Text>Name <Input type="text" name="name" defaultValue={dataSource?.name} /></Text>
             <Text>Description <Textarea type="text" name="description" defaultValue={dataSource?.description} /></Text>
+            <Text>Cover image <Textarea type="text" name="coverImage" defaultValue={dataSource?.coverImage} /></Text>
             <PlacePicker defaultPlace={dataSource?.place} defaultLatitude={dataSource?.latitude} defaultLongitude={dataSource?.longitude} />
             <Text>Display hour: <Checkbox type="checkbox" name="displayHour" checked={displayHour} onChange={e => setDisplayHour(e.target.checked)} /></Text>
             <Text>From <Input type={displayHour ? "datetime-local" : "date"} name="from" defaultValue={dataSource?.from} /></Text>
@@ -15,7 +16,6 @@ export default function EventForm({ dataSource }) {
             <Text>Url <Input type="text" name="url" defaultValue={dataSource?.url} /></Text>
             <Text>Artists <Input type="text" name="artists" defaultValue={dataSource?.artists} /></Text>
             <Text>Tags <Input type="text" name="tags" defaultValue={dataSource?.tags} /></Text>
-            
         </>
     )
 }

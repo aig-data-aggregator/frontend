@@ -158,6 +158,7 @@ export default function Header() {
                 <Link href="/artworks" mr="2em">Artworks</Link>
                 <Link href="/artists" mr="2em">Artists</Link>
                 <Link href="/news" mr="2em">News</Link>
+                <Link href="/events" mr="2em">Events</Link>
                 {session?.user && <Link href={"/artist/"+session.address} mr="2em">Personal page</Link>}
                 {
                     session?.user && isModerator(session.address) && (
@@ -172,7 +173,6 @@ export default function Header() {
                     }
                 </select>
             </Flex>
-            {JSON.stringify(suggestions)}
             {
                 suggestions && suggestions.map(suggestion => (
                     <label>{suggestion.name}<button onClick={() => search(suggestion.address)}>Go</button></label>

@@ -28,6 +28,7 @@ export default function EventsTab() {
         const event = {
             name: formData.get("name"),
             description: formData.get("description"),
+            coverImage: formData.get("coverImage"),
             place: formData.get("place"),
             latitude: formData.get("latitude"),
             longitude: formData.get("longitude"),
@@ -56,6 +57,7 @@ export default function EventsTab() {
         const event = {
             name: formData.get("name"),
             description: formData.get("description"),
+            coverImage: formData.get("coverImage"),
             place: formData.get("place"),
             coordinates: [formData.get("latitude"), formData.get("longitude")],
             from: formData.get("from"),
