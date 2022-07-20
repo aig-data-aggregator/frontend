@@ -3,7 +3,15 @@ import clientPromise from "../../common/mongodb"
 
 async function getEvents(req, res, session, eventsCollection){
     try{
-        const events = await eventsCollection.find({}).toArray()
+        let query
+        if (req.query.artist) {
+            query = {
+                artists: req.query.artist.toLowerCase()
+            }
+        } else {
+            query = {}
+        }
+        const events = await eventsCollection.find(query).toArray()
         res.status(200).json(events)
     }
     catch(err){
@@ -21,7 +29,10 @@ async function postEvents(req, res, session, eventsCollection){
     else {
         try {
             const response = await eventsCollection.insertOne(
-                req.body
+                {
+                    ...req.body,
+                    artists: req.body.artists.map(address => address.toLowerCase())
+                }
             )
             res.status(200).json(response)
         } catch (e) {

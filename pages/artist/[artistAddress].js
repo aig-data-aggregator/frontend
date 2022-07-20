@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import NftCard from '../../components/NftCard';
+import EventCard from '../../components/EventCard';
 import {Button, Box} from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex} from '@chakra-ui/react'
 
@@ -21,6 +22,7 @@ export default function ArtistPage(){
     const [pageIndexMinted, setPageIndexMinted] = useState(0)
     const [loadingMinted, setLoadingMinted] = useState(false)
     const [artistInfo, setArtistInfo] = useState(null)
+    const [relatedEvents, setRelatedEvents] = useState(null)
 
     const { data: session, status } = useSession()
     
@@ -110,9 +112,15 @@ export default function ArtistPage(){
         setNftsMinted(allMinted[newPageIndex].nfts)
     }
 
+    async function fetchRelatedEvents() {
+        const newRelatedEvents = await fetch('/api/events?artist=' + encodeURI(artistAddress)).then(res => res.json())
+        setRelatedEvents(newRelatedEvents)
+    }
+
     useEffect(() => {
         if (artistAddress) {
             fetchNfts()
+            fetchRelatedEvents()
         }
         querySingleArtist(artistAddress).then(newInfo => setArtistInfo(newInfo))
     }, [artistAddress])
@@ -126,6 +134,7 @@ export default function ArtistPage(){
                 <TabList>
                     <Tab>Minted</Tab>
                     <Tab>Collected</Tab>
+                    <Tab>Events</Tab>
                 </TabList>
 
                 <TabPanels>
@@ -161,6 +170,19 @@ export default function ArtistPage(){
                             {nftsOwned.map(nft => (
                                 <NftCard key={nft.collectionAddress + nft.tokenId} name={nft.name} description={nft.description} thumbnail={nft.thumbnail} collectionAddress={nft.collectionAddress} nftId={nft.tokenId}/>
                             ))}
+                        </Box>
+                    </TabPanel>
+                    <TabPanel>
+                       <Box style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "space-between",
+                                margin: "auto",
+                                alignItems: "center",
+                            }}>
+                            {relatedEvents && relatedEvents.map(event => 
+                                <EventCard {...event} />    
+                            )}
                         </Box>
                     </TabPanel>
                 </TabPanels>

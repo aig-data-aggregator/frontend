@@ -2,7 +2,7 @@ import { getSession } from "next-auth/react"
 import clientPromise from "../../../common/mongodb"
 import { ObjectId } from 'mongodb'
 
-async function editEvents(req, res, session, eventsCollection){
+async function editEvent(req, res, session, eventsCollection){
     const moderatorCollection = (await clientPromise).db('dev').collection('moderators')
     const moderators = await moderatorCollection.find({}).toArray()
     if (!moderators.find(moderator => moderator._id.toLowerCase() === session.address.toLowerCase())) {
@@ -13,7 +13,10 @@ async function editEvents(req, res, session, eventsCollection){
             const response = await eventsCollection.findOneAndUpdate(
                 {_id: new ObjectId(req.query.eventId)},
                 {
-                    $set: req.body
+                    $set: {
+                        ...req.body,
+                        artists: req.body.artists.map(address => address.toLowerCase())
+                    }
                 }
             )
             res.status(200).json(response)
@@ -49,7 +52,7 @@ export default async (req, res) => {
     const session = await getSession({ req })
     switch(req.method) {
         case 'PUT':
-            await editEvents(req, res, session, eventsCollection)
+            await editEvent(req, res, session, eventsCollection)
         break;
         case 'DELETE':
             await deleteEvents(req, res, session, eventsCollection)
