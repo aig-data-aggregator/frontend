@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
-import { addressToCollections, queryNftInfo } from '../../../common/interface.js'
+import { addressToCollection, queryNftInfo } from '../../../common/interface.js'
 import { Box, Heading, Flex, Image, Text, Link } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { useRecoilState } from "recoil";
@@ -26,7 +26,7 @@ export default function NftPage () {
     }
 
     const queryCollection = async () => {
-        const collection = await addressToCollections(collectionAddress)
+        const collection = await addressToCollection(collectionAddress)
         setCollectionInfo(collection)
     }
 

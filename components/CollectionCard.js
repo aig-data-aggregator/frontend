@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Link from "next/link"
 import { Box, Image, Badge, Text } from "@chakra-ui/react"
-import {addressToCollections} from "../common/interface"
+import {addressToCollection} from "../common/interface"
 import { useRouter } from "next/router";
 import { useCurrencyConverter } from "../common/currency";
 
@@ -10,7 +10,7 @@ export default function CollectionCard({name, coverUrl, description, address}) {
     const convert = useCurrencyConverter()
 
     const queryCollection = async () => {
-        const singleCollectionInfo = await addressToCollections(address)
+        const singleCollectionInfo = await addressToCollection(address)
         setCollection(singleCollectionInfo)
     }
 

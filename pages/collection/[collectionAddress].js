@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router"
 import NftCard from '../../components/NftCard';
 
-import { addressToCollections, queryNfts } from '../../common/interface'
+import { addressToCollection, queryNfts } from '../../common/interface'
 import { Box, Button, Image, Heading, Flex } from "@chakra-ui/react";
 import {
   Stat,
@@ -39,7 +39,7 @@ export default function CollectionsPage () {
         }])
         setNfts(newNfts.nfts)
         setPageIndex(0)
-        setCollection(await addressToCollections(collectionAddress))
+        setCollection(await addressToCollection(collectionAddress))
     }
     
     useEffect(() => {

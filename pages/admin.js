@@ -25,6 +25,7 @@ import {
 import Map from "../components/Map"
 import PlacePicker from "../components/PlacePicker"
 import EventsTab from "../components/EventsTab"
+import ArtworksTab from "../components/ArtworksTab"
 
 export default function Admin() {
     const [moderators, setModerators] = useState(null)
@@ -269,6 +270,7 @@ export default function Admin() {
                                     <TabList>
                                         <Tab>Moderators</Tab>
                                         <Tab>Collections</Tab>
+                                        <Tab>Artworks</Tab>
                                         <Tab>Artists</Tab>
                                         <Tab>News</Tab>
                                         <Tab>Events</Tab>
@@ -361,6 +363,9 @@ export default function Admin() {
                                                 }
                                                 </Accordion>
                                             </Box>
+                                        </TabPanel>
+                                        <TabPanel align="left">
+                                            <ArtworksTab />
                                         </TabPanel>
                                         <TabPanel align="left">
                                             <Box>

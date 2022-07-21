@@ -1,7 +1,5 @@
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
 import { collections } from "./collections";
-import { artists } from "./artists";
-import { featured } from "./featured";
 //import { collections as collectionsJson } from "../static/collections.json"
 
 const networkInfo = {
@@ -28,7 +26,7 @@ const queryArtists = async () => {
     return artists.map(artists => ({...artists, address: artists._id}))
 }
 
-const addressToCollections = async (address) => {
+const addressToCollection = async (address) => {
     const collections = await queryCollections()
     if(collections.map(collection=>collection.address).includes(address)) {
         const matchingCollection = collections.filter(collection => collection.address === address)[0]
@@ -279,7 +277,7 @@ const nftsOwnedByAddress = async (address, hashPage) => {
 }
 
 const queryFeatured = async () => {
-    return featured
+    return await fetch('/api/artworks').then(res => res.json())
 }
 
 const queryTopCollections = async (period)=> {
@@ -320,7 +318,7 @@ const queryOgFields = async (url) => {
     return fields
 }
 
-export { addressToCollections, addressToArtist, 
+export { addressToCollection, addressToArtist, 
             queryCollections, queryNfts, queryNftInfo, 
             getCategories, 
             nftsOwnedByAddress, nftsMintedByAddress, 
