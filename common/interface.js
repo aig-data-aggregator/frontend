@@ -1,5 +1,4 @@
 import { ZDK, ZDKNetwork, ZDKChain } from "@zoralabs/zdk";
-import { collections } from "./collections";
 //import { collections as collectionsJson } from "../static/collections.json"
 
 const networkInfo = {
